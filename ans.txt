@@ -1,0 +1,1 @@
+4(wall) * 1(cost) + 3(wall) * 2(cost) + 2(wall) * 3(cost) + 1(wall) * 4(cost)
