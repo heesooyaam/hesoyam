@@ -1,0 +1,47 @@
+Struct (structer) - структура, объединяющая несколько полей в одном целое
+inline - ключ, дающий возможность переместить код из метода в место вызова функции
+static - разрешает пользоваться функцией, объявленной в структуре, даже если самой структуры как объекта еще не существует
+
+struct STRUCTER
+{
+    сначала то, что  будем хранить:
+
+    int value;
+    STRUCTER* PointerToNext;
+    mutable int value_m; - mutable - то есть можно менять даже для объектов-констант
+    ...
+
+    конструктор:
+
+    STRUCTER() - дефолтный
+    {
+        value = 0;
+        PointerToNext = nullptr;
+    }
+    SRUCTER(int value, auto* Next) - свой конструктор
+    {
+        this->value = value;
+        PointerToNext = Next;
+    }
+    ...
+
+    методы:
+
+    void PrintValue()
+    {
+        cout << this->value() << endl;
+    }
+    static void PrintHello()
+    {
+        cout << "HELLO\n;
+    }
+    void F(int i) const - указали, что метод константный, то есть не меняет наш объект. теперь можно вызывать этот метод для объектов-констант
+    {
+        cout << i << endl;
+    }
+
+};
+int main()
+{
+    STRUCTER::PrintHello();
+}

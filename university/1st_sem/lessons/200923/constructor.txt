@@ -1,0 +1,33 @@
+Конструктор инциуиализирует объект класса/структуры, запускается в момент создания объекта класса/структуры.
+Есть дефолтный конструктор, который существует, когда никаких других в классе не объявленно.
+
+Синтаксис:
+
+class myClass
+{
+    private:
+    int value;
+    int cnt;
+    public:
+        myClass() = default; - дефолтный
+        myClass() = delete; - удалить дефолтный конструктор
+        myClass(bool notDefault) // myClass MC; - создастся myClass MC с value = 0 и cnt = 0
+        {
+            this->value = 0;
+            this->cnt = 0;
+        }
+        myClass(bool notDefault) = delete; - удалить не дефолтный конструктор с таким полем
+        myClass(int val, int count) //myClass  MC({val}, {count}) / myClass MC = myClass({val}, {count}) / myClass* MC = new myClass({val}, {count})
+        {
+            this->value = val;
+            this->cnt = count;
+        }
+        ~myClass()
+        {
+            delete value;
+            delete cnt;
+        }
+}
+
+
+деструктор есть и он только один(всегда!!!)
