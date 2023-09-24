@@ -1,0 +1,15 @@
+{
+	"": {
+		"prefix": "readGraf",
+		"body": [
+		  "vector<vector<int>> graf(n + 1);",
+		  "while(m--)",
+		  "{",
+		  "    int from, cur; cin >> from >> cur;",
+		  "    graf[from].eb(cur);",
+		  "    graf[cur].eb(from);",
+		  "}"
+		],
+		"description": ""
+	  }
+}

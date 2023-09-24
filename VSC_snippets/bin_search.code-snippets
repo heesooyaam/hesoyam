@@ -1,0 +1,23 @@
+{
+	"": {
+		"prefix": "myBinSearch",
+		"body": [
+		  "    ll l, r;",
+		  "    l = 0; r = llINF;",
+		  "    while(l + 1 < r)",
+		  "    {",
+		  "        ll mid = (l + r) / 2;",
+		  "        if(ok(mid))",
+		  "        {",
+		  "            l = mid;",
+		  "        }",
+		  "        else{",
+		  "            r = mid;",
+		  "        }",
+		  "    }",
+		  "    if(ok(l)) cout << l;",
+		  "    else cout << r;"
+		],
+		"description": ""
+	  }
+}

@@ -1,0 +1,13 @@
+{
+	"": {
+		"prefix": "readA",
+		"body": [
+		  "vector <int> vec (n);",
+		  "for(int i = 0; i < n; i++)",
+		  "{",
+		  "    cin >> vec[i];",
+		  "}"
+		],
+		"description": ""
+	  }
+}
