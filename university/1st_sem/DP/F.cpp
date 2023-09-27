@@ -19,8 +19,31 @@ void solve()
     cin >> start >> finish;
     int time, d;
     cin >> time >> d;
-    vector<vector<int>> dp(time + 1, vector<int> (max(start, finish) + time / 2 * d, -1));
-    for(int i = )
+    vector<unordered_map<int, int>> dp(time + 1);
+    dp[1][start] = start;
+    // for(int acceleration = -1 * d; acceleration <= d; ++acceleration)
+    // {
+    //     s.insert(start + acceleration);
+    // }
+    // s.insert(INT_MAX);
+    for(int t = 1; t < time; ++t)
+    {
+        for(auto& [speed, dist] : dp[t])
+        {
+            int cur = speed;
+            for(int acceleration = -1 * d; acceleration <= d; ++acceleration)
+            {
+                if(cur + acceleration - (time - t - 1) * d > finish or cur + acceleration + (time - t - 1) * d < finish) continue;
+                if(auto search = dp[t + 1].find(cur + acceleration); search != dp[t + 1].end()) dp[t + 1][cur + acceleration] = max(dp[t + 1][cur + acceleration], dp[t][cur] + cur + acceleration);
+                else dp[t + 1][cur + acceleration] = dp[t][cur] + cur + acceleration;
+                //s.insert(cur + acceleration);
+            }
+            //s.pop();
+        }
+        //s.pop();
+        //s.push(INT_MAX);
+    }
+    cout << dp[time][finish] << endl;
 }
 int main()
 {
