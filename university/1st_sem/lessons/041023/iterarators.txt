@@ -1,0 +1,47 @@
+                                                    Итераторы
+
+- указывает не на память, а на ячейку контейнера
+- есть много разных типов, у каждого свой функционал
+
+Классификация итераторов
+\\\\\\\\\\\\\\\\\\\\\\| read, increment by 1 | multiple passes increment | decrement | random acces | contiguous storage  | while, increment by 1 |
+=======================================================================================================================================================
+InputIterator         |           +          |             -             |     -     |       -      |          -          |           -           |
+ForwardItwerator      |           +          |             +             |     -     |       -      |          -          |           -           |
+BidirectionalIterator |           +          |             +             |     +     |       -      |          -          |           -           |
+RandomAccesIterator   |           +          |             +             |     +     |       +      |          -          |           -           |
+ContiguousIterator    |           +          |             +             |     +     |       +      |          +          |           -           |       
+OutputIterator        |           -          |             -             |     -     |       -      |          -          |           +           |
+
+в std::forward_list используется ForwardItwerator, потому что можем ходить только вперед
+в std::list -- BidirectionalIterator
+в std::deque -- RandomAccesIterator
+ContiguousIterator начиная с 17 стандарта
+
+
+Общие функции над итераторами:
+
+std::advance(it, steps) - изменяет итератор без его копирования(+ == forward, - == backward)
+std::next(it, steps), std::prev(it, steps) - создают копию-итератор, сдвинутую на x шагов, возвращают ее
+std::distance() - возвращает кол-во шагов между итераторами(только если итераторы доступны друг для друга)
+
+
+Адаптеры:
+
+reverse_iterator - работает для BidirectionalIterator(.rbegin(), .rend())
+
+
+std::inserter(where?(container), since which place?(iterator after which we paste copied data))
+- функция, которая конструирует std::insert_iteratir для контейнера
+
+ex:
+std::vector <int> d = (1, 2, 3);
+std::vector <int> v = (10, 50);
+std::copy(d.begin(), d.end(), std::inserter(v, std::next(d.begin())));
+// result v: 10 1 2 3 50
+
+std::front_inserter()/back_inserter()
+ex:
+std::deque<int> q = {10, 1, 2}
+std::copy(d.begin(), d.end(), front_iterator(q));
+//result q: 10 1 2 --> 3 10 1 2 --> 2 3 10 1 2 --> 1 2 3 10 1 2  
