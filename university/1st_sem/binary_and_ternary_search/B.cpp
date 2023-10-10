@@ -9,40 +9,50 @@ using namespace std;
 #define ppf pop_front
 #define ss second
 #define ff first
+#define mp make_pair
 #define all(x) (x).begin(),(x).end()
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'   
-
+bool cmp(vector<int>& a, vector<int>& b)
+{
+    return a[0] < b[0];
+}
 void solve()
 {
     int n, m;
+    // n - competetitors
+    // m - questions
     cin >> n >> m;
-    vector<int> victories(n);
+    vector<int> victories(n + 1);
+    //competitor i has victories[i] victories
     deque<pair<int, int>> q;
-    for(int i = 0; i < n; ++i)
+    vector<int> power (n + 1);
+    // q - current sequence of competitors
+    for(int i = 1; i < n + 1; ++i)
     {
-        int x; cin >> x;
-        q.eb(x, i);
+        cin >> power[i];
+        q.eb(power[i], i);
     }
-    vector <vector<int>> events (m, vector<int> (3));
+    vector <vector<int>> questions (m, vector<int> (3));
+    // questions - array of requests: question[№ of question][0 - rounds were played, 1 - number of competitor, 2 - request's number] = 
     for(int i = 0; i < m; ++i)
     {
-        cin >> events[i][1] >> events[i][0];
-        events[i][2] = i;
+        cin >> questions[i][1] >> questions[i][0];
+        questions[i][2] = i;
     }
+    
     vector <int> ans(m);
-    sort(all(events));
+    sort(all(questions), cmp);
     int rounds = 0;
     int ptr = 0;
-    do
+    while(q.front().ff != n)
     {
-        for(; ptr < ans.size() && events[ptr][0] == rounds; ++ptr)
+        for(; ptr < ans.size() && questions[ptr][0] == rounds; ++ptr)
         {
-            ans[events[ptr][2]] = victories[events[ptr][1]];
+            ans[questions[ptr][2]] = victories[questions[ptr][1]];
         }
-
         auto first = q.front();
         q.ppf();
         if(first.ff > q.front().ff)
@@ -52,22 +62,24 @@ void solve()
             q.pb(second);
             q.pf(first);
             ++victories[first.ss];
+            //cout << first.ss<< ' ' << rounds << endl;
         }
         else
         {
             ++victories[q.front().ss];
             q.pb(first);
+            //cout << q.front().ss << ' ' << rounds << endl;
         }
         ++rounds;
-    }while(q.front().ff != n);
+    }
     
-    for(; ptr < m; ++ptr)
+    for(; ptr < ans.size(); ++ptr)
     {
-        if(events[ptr][1] == n)
+        if(power[questions[ptr][1]] == n)
         {
-            ans[events[ptr][2]] = victories[events[ptr][1]] + events[ptr][0] - rounds;
+            ans[questions[ptr][2]] = victories[questions[ptr][1]] + questions[ptr][0] - rounds;
         }
-        else ans[events[ptr][2]] = victories[events[ptr][1]];
+        else ans[questions[ptr][2]] = victories[questions[ptr][1]];
     }
 
     for(int i = 0; i < m; ++i)
