@@ -33,7 +33,7 @@ void solve()
     int MX = 1 << n;
     for(int mask = 1; mask < MX; ++mask)
     {
-        ans[mask] = sum(mask);
+        //ans[mask] = sum(mask);
         for(int submask = mask - 1; submask; --submask)
         {
             submask &= mask;
