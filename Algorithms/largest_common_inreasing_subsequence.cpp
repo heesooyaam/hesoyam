@@ -19,6 +19,7 @@ using namespace std;
 
 void solve()
 {
+    // O(n^2 * m)
     int n;
     cin >> n;
     vector <int> a (n);
@@ -32,13 +33,15 @@ void solve()
     {
         cin >> b[i];
     }
-    vector<vector<int>> dp(n, vector<int> (m, 0));
-    vector<int> prev(n, -1);
+    cout << endl;
+
+    vector<vector<int>> dp1(n, vector<int> (m, 0));
+    vector<int> prev1(n, -1);
     for(int i = 0; i < n; ++i)
     {
         for(int j = 0; j < m; ++j)
         {
-            dp[i][j] = int(a[i] == b[j]);
+            dp1[i][j] = int(a[i] == b[j]);
         }
     }
     for(int i = 0; i < n; ++i)
@@ -49,28 +52,27 @@ void solve()
             {
                 for(int ii = 0; ii < i; ++ii)
                 {
-                    if(a[ii] < a[i] && dp[ii][j] + 1 > dp[i][j])
+                    if(a[ii] < a[i] && dp1[ii][j] + 1 > dp1[i][j])
                     {
-                        dp[i][j] = dp[ii][j] + 1;
-                        prev[i] = ii;
+                        dp1[i][j] = dp1[ii][j] + 1;
+                        prev1[i] = ii;
                     }
                 }
             }
-            else dp[i][j] = dp[i][j - 1];
+            else dp1[i][j] = dp1[i][j - 1];
         }
     }
     int ans = 0;
     int idxOfLast = 0;
     for(int i = 0; i < n; ++i)
     {
-        if(dp[i][m - 1] > ans)
+        if(dp1[i][m - 1] > ans)
         {
-            ans = dp[i][m - 1];
+            ans = dp1[i][m - 1];
             idxOfLast = i;
         }
     }
-    
-    cout << ans << endl;
+    cout << "O(n^2 * m): " <<  ans << endl;
     if(ans == 0)
     {
         return;
@@ -80,10 +82,110 @@ void solve()
     do
     {
         answer.pb(a[cur]);
-        cur = prev[cur];
+        cur = prev1[cur];
     } while(cur != -1);
     reverse(all(answer));
     print(answer);
+    cout << endl;
+
+
+    // O(n * m)
+
+    vector<vector<int>> dp2(n, vector<int> (m, 0));
+    vector<int> prev2(n, -1);
+    for(int i = 0; i < n; ++i)
+    {
+        for(int j = 0; j < m; ++j)
+        {
+            dp2[i][j] = int(a[i] == b[j]);
+        }
+    }
+
+    for(int j = 1; j < m; ++j)
+    {
+        int best = 0;
+        int idxOfBest = -1;
+        for(int i = 0; i < n; ++i)
+        {
+            dp2[i][j] = dp2[i][j - 1]; // если не берем a[i], то лучший вариант уже посчитан
+            if(a[i] == b[j] && best + 1 > dp2[i][j])
+            {
+                dp2[i][j] = best + 1;
+                prev2[i] = idxOfBest;
+            }
+            if(a[i] < b[j] && dp2[i][j - 1] > best)
+            {
+                best = dp2[i][j - 1];
+                idxOfBest = i;
+            }
+        }
+    }
+
+    int idx = 0;
+    int mxL = 0;
+    for(int i = 0; i < n; ++i)
+    {
+        if(dp2[i][m - 1] > mxL)
+        {
+            idx = i;
+            mxL = dp2[i][m - 1];
+        }
+    }
+
+    cout << "O(n * m): " << mxL << endl;
+
+    if(mxL == 0)
+    {
+        return;
+    }
+
+    vector<int> ans2;
+    int curr = idx;
+    do
+    {
+        ans2.pb(a[curr]);
+        curr = prev2[curr];
+    } while (curr != -1);
+    reverse(all(ans2));
+    print(ans2);
+    cout << endl;
+    
+
+    // O(n^2 * m^2)
+
+    vector<vector<int>> dp3 (n, vector<int> (m));
+
+    for(int i = 0; i < n; ++i)
+    {
+        for(int j = 0; j < m; ++j)
+        {
+            if(a[i] == b[j])
+            {
+                dp3[i][j] = 1;
+                for(int ii = 0; ii < i; ++ii)
+                {
+                    for(int jj = 0; jj < j; ++jj)
+                    {
+                        if(a[ii] == b[jj] && a[ii] < a[i])
+                        {
+                            dp3[i][j] = max(dp3[i][j], dp3[ii][jj] + 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    int llong = 0;
+    for(int i = 0; i < n; ++i)
+    {
+        for(int j = 0; j < m; ++j)
+        {
+            llong = max(llong, dp3[i][j]);
+        }
+    }
+
+    cout << "O(n^2 * m^2): " << llong << endl;
 }
 int main()
 {

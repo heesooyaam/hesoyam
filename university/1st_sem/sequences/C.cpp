@@ -32,58 +32,55 @@ void solve()
     {
         cin >> b[i];
     }
-    vector<vector<int>> dp(n, vector<int> (m, 0));
-    vector<int> prev(n, -1);
-    for(int i = 0; i < n; ++i)
+    vector<vector<int>> dp(n, vector<int> (m));
+    vector<int> prev(m, -1);
+    for(int j = 0; j < m; ++j)
     {
+        dp[0][j] = a[0] == b[j];
+    }
+    for(int i = 1; i < n; ++i)
+    {
+        int best = 0;
+        int idxOfBest = -1;
         for(int j = 0; j < m; ++j)
         {
-            dp[i][j] = int(a[i] == b[j]);
-        }
-    }
-    for(int i = 0; i < n; ++i)
-    {
-        for(int j = 1; j < m; ++j)
-        {
-            if(a[i] == b[j])
+            dp[i][j] = dp[i - 1][j];
+
+            if(b[j] < a[i] && dp[i][j] > best)
             {
-                for(int ii = 0; ii < i; ++ii)
-                {
-                    if(a[ii] < a[i] && dp[ii][j] + 1 > dp[i][j])
-                    {
-                        dp[i][j] = dp[ii][j] + 1;
-                        prev[i] = ii;
-                    }
-                }
+                best = dp[i][j];
+                idxOfBest = j;
             }
-            else dp[i][j] = dp[i][j - 1];
+            else if(a[i] == b[j] && dp[i][j] < best + 1)
+            {
+                dp[i][j] = best + 1;
+                prev[j] = idxOfBest;
+            }
         }
     }
-    int ans = 0;
-    int idxOfLast = 0;
-    for(int i = 0; i < n; ++i)
+
+    vector<int> ans;
+    int length = 0;
+    int idx = 0;
+    for(int j = 0; j < m; ++j)
     {
-        if(dp[i][m - 1] > ans)
+        if(dp[n - 1][j] > length)
         {
-            ans = dp[i][m - 1];
-            idxOfLast = i;
+            length = dp[n - 1][j];
+            idx = j;
         }
     }
-    
-    cout << ans << endl;
-    if(ans == 0)
-    {
-        return;
-    }
-    vector <int> answer;
-    int cur = idxOfLast;
+
+    cout << length << endl;
+    if(length == 0) return;
+
     do
     {
-        answer.pb(a[cur]);
-        cur = prev[cur];
-    } while(cur != -1);
-    reverse(all(answer));
-    print(answer);
+        ans.pb(b[idx]);
+        idx = prev[idx];
+    } while (idx != -1);
+    reverse(all(ans));
+    print(ans);
 }
 int main()
 {
