@@ -1,0 +1,6 @@
+BST
+---
+options:
+- find(k)
+- insert(k)
+- remove(k)
