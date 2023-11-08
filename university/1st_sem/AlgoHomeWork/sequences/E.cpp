@@ -28,10 +28,12 @@ void solve()
     for(int i = 1; i < m; ++i)
     {
         if(a[0] == b[i]) LCS[0][i] = 2;
+        else LCS[0][i] = max(0, LCS[0][i - 1] - 1);
     }
     for(int i = 1; i < n; ++i)
     {
         if(a[i] == b[0]) LCS[i][0] = 2;
+        else LCS[i][0] = max(0, LCS[i - 1][0] - 1);
     }
     for(int i = 1; i < n; ++i)
     {
@@ -41,9 +43,8 @@ void solve()
             {
                 LCS[i][j] = LCS[i - 1][j - 1] + 2;
             }
-            else{
-                LCS[i][j] = max({LCS[i - 1][j] - 1, LCS[i][j - 1] - 1, 0});
-            }
+            else LCS[i][j] = max({LCS[i - 1][j] - 1, LCS[i][j - 1] - 1, 0});
+            
         }
     }
     int mx = 0;
@@ -55,21 +56,21 @@ void solve()
         }
     }
     cout << mx << endl;
-    cout << "  ";
-    for(int i = 0; i < m; ++i)
-    {
-        cout << ' ' << b[i];
-    }
-    cout << endl << endl;
-    for(int i = 0; i < n; ++i)
-    {
-        for(int j = 0; j < m; ++j)
-        {
-            if(j == 0) cout << a[i] << "  ";
-            cout << LCS[i][j] << ' ';
-        }
-        cout << endl;
-    }
+    // cout << "  ";
+    // for(int i = 0; i < m; ++i)
+    // {
+    //     cout << ' ' << b[i];
+    // }
+    // cout << endl << endl;
+    // for(int i = 0; i < n; ++i)
+    // {
+    //     for(int j = 0; j < m; ++j)
+    //     {
+    //         if(j == 0) cout << a[i] << "  ";
+    //         cout << LCS[i][j] << ' ';
+    //     }
+    //     cout << endl;
+    // }
 }
 int main()
 {
