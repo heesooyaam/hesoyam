@@ -4,3 +4,4 @@ options:
 - find(k)
 - insert(k)
 - remove(k)
+in order обход: левый -> я -> правый
