@@ -12,12 +12,12 @@ struct SharedData
 template<typename T>
 class SharedPtr
 {
-    friend WeekPointer;
 private:
     SharedData<T>* data;
     SharedPtr(SharedData<T>* otherData) 
         : data_(otherData) {}
 public:
+    friend WeakPointer;
     SharedPtr()
         : data(new SharedData<T>(ptr_ = new T(), sharedCounter = 1, weakCounter = 0)) {
     } 

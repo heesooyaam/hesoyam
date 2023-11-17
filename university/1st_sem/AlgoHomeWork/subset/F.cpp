@@ -1,5 +1,4 @@
-// найти количество множеств сумма чисел которых больше или равна k
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 #define ll long long
 #define ull unsigned long long
@@ -20,31 +19,11 @@ using namespace std;
 
 void solve()
 {
-    int n;
+    ll n;
     cin >> n;
-    vector <int> a (n);
-    for(int i = 0; i < n; ++i)
-    {
-        cin >> a[i];
-    }
-    unordered_map<int, int> ans;
-    ans[0] = 0;
-    int MX = 1 << n;
-    // O(2^n)
-    for(int mask = 0; mask < MX; ++mask)
-    {
-        if(mask == 0) continue;
-        
-        for(int i = 0; i < n; ++i)
-        {
-            if(mask & (1 << i))
-            {
-                int submask = mask & (~0 - (1 << i));
-                ans[mask] = ans[submask] + a[i];
-                break;
-            }
-        }
-    }
+    // divisors: 2, 3, 5, 7,   6, 10, 14, 15, 21, 35,    30, 42, 70, 105,    210
+    ll ans = n - (n / 2 + n / 3 + n / 5 + n / 7 - (n / 6 + n / 10 + n / 14 + n / 15 + n / 21 + n / 35 - ((n / 30 + n / 42 + n / 70 + n / 105) - n / 210)));
+    cout << ans << endl;
 }
 int main()
 {
