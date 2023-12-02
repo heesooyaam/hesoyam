@@ -17,7 +17,8 @@ using namespace std;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n' 
-class TimeMeasurer {
+class TimeMeasurer
+{
 private:
     const std::chrono::steady_clock::time_point begin;
 public:
@@ -32,7 +33,6 @@ public:
         cout << t.count() << '\n';
     }
 };
-
 
 inline ll countDist(pair<ll, ll>& a, pair<ll, ll>& b)
 {

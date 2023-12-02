@@ -1,0 +1,23 @@
+"": {
+	"prefix": "timeMeasurer",
+	"body": [
+	  "class TimeMeasurer",
+	  "{",
+	  "private:",
+	  "    const std::chrono::steady_clock::time_point begin;",
+	  "public:",
+	  "    TimeMeasurer()",
+	  "    : begin(std::chrono::steady_clock::now())",
+	  "    {}",
+	  "    ",
+	  "    ~TimeMeasurer()",
+	  "    {",
+	  "        auto t = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - begin);",
+	  "        cout << \"Elapsed time: \";",
+	  "        cout << t.count() << '\\n';",
+	  "    }",
+	  "};",
+	  ""
+	],
+	"description": ""
+  }

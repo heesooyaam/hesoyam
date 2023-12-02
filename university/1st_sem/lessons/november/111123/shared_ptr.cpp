@@ -17,7 +17,7 @@ private:
     SharedPtr(SharedData<T>* otherData) 
         : data_(otherData) {}
 public:
-    friend WeakPointer;
+    friend class WeakPointer;
     SharedPtr()
         : data(new SharedData<T>(ptr_ = new T(), sharedCounter = 1, weakCounter = 0)) {
     } 
