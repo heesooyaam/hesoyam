@@ -1,0 +1,16 @@
+{
+	"": {
+		"prefix": "hashPoints",
+		"body": [
+		  "const ll X = 31;",
+		  "const ll Y = 991;",
+		  "const ll Z = 291;",
+		  "const ll D = 257;",
+		  "const ll xMOD = 1'000'000'007;",
+		  "const ll yMOD = 1'000'000'029;",
+		  "const ll zMOD = 1'000'000'013;",
+		  "const ll dMOD = 1'000'000'129;"
+		],
+		"description": ""
+	}
+}
