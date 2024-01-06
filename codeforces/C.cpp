@@ -19,23 +19,59 @@ using ld = long double;
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    vector<ll> a(n + 1), b(n + 1);
-    for(int i = 1; i < n + 1; ++i) cin >> a[i];
-    for(int i = 1; i < n + 1; ++i) cin >> b[i];
-    vector<ll> prefA(n + 1, 0), prefB(n + 1, INT_MIN);
-    for(int i = 1; i <= n; ++i)
+    int n;
+    cin >> n;
+    vector<int> vec(n);
+    input(vec);
+    vector<int> a, b;
+    a.pb(vec[0]);
+    b.pb(1e9 + 10);
+    for(int i = 1; i < n - 1; ++i)
     {
-        prefA[i] = prefA[i - 1] + a[i];
-        prefB[i] = max(prefB[i - 1], b[i]);
+        if(vec[i] <= a.back() && vec[i] <= b.back())
+        {
+            
+                if(vec[i] - a.back() > vec[i] - b.back())
+                {
+                    a.pb(vec[i]);
+                }
+                else b.pb(vec[i]);
+            
+        }
+        else if(vec[i] <= a.back())
+        {
+            a.pb(vec[i]);
+        }
+        else if(vec[i] <= b.back())
+        {
+            b.pb(vec[i]); 
+        }
+        else
+        {
+            if(vec[i] - a.back() > vec[i] - b.back())
+            {
+                a.pb(vec[i]);
+            }
+            else b.pb(vec[i]);
+        }
     }
-    ll mx = INT_MIN;
-    for(int i = 1; i <= min(n, k); ++i)
+    if(vec.back() <= a.back())
     {
-        mx = max(mx, prefA[i] + (k - i) * prefB[i]);
+        a.pb(vec.back());
     }
-    cout << mx << endl;
+    else b.push_back(vec.back());
+    ll ans = 0;
+    for(int i = 0; i < a.size() - 1; ++i)
+    {
+        if(a[i] < a[i + 1]) ++ans;
+    }
+    for(int i = 0; i < b.size() - 1; ++i)
+    {
+        if(b[i] < b[i + 1]) ++ans;
+    }
+    // cout << "a: "; print(a);
+    // cout << "b: "; print(b);
+    cout << ans << endl;
 }
 int32_t main()
 {

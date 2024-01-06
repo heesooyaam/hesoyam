@@ -19,17 +19,18 @@ using ld = long double;
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    for(int i = n - k; i <= n; ++i)
+    int pos = 0, neg = 0;
+    int n;
+    cin >> n;
+    for(int i = 0; i < n; ++i)
     {
-        cout << i << ' ';
+        char ch;
+        cin >> ch;
+        if(ch == '+') ++pos;
+        else ++neg;
     }
-    for(int i = n - k - 1; i >= 1; --i)
-    {
-        cout << i << ' ';
-    }
-    cout << endl;
+    int r = abs(pos - neg);
+    cout << r << endl;
 }
 int32_t main()
 {

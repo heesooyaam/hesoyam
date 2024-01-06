@@ -19,21 +19,13 @@ using ld = long double;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    map<char, int> mp;
-    string s;
-    cin >> s;
-    for(int i = 0; i < n; ++i)
+    int a, b;
+    cin >> a >> b;
+    if((a + b) % 2 == 0)
     {
-        mp[s[i]]++;
+        cout << "Bob\n";
     }
-    int cnt = 0;
-    for(auto& [p, t] : mp)
-    {
-        if(p - 'A' + 1 <= t) ++cnt;
-    }
-    cout << cnt << endl;
+    else cout << "Alice\n";
 }
 int32_t main()
 {
