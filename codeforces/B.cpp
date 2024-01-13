@@ -19,18 +19,25 @@ using ld = long double;
 
 void solve()
 {
-    int pos = 0, neg = 0;
-    int n;
-    cin >> n;
-    for(int i = 0; i < n; ++i)
+    int n, k, x;
+    cin >> n >> k >> x;
+    vector<int> vec(n + 1);
+    for(int i = 1; i <= n; ++i)
     {
-        char ch;
-        cin >> ch;
-        if(ch == '+') ++pos;
-        else ++neg;
+        cin >> vec[i];
     }
-    int r = abs(pos - neg);
-    cout << r << endl;
+    sort(all(vec));
+    ll sum = INT_MIN;
+    vector<int> pref(n + 1);
+    for(int i = 1; i < n + 1; ++i)
+    {
+        pref[i] = pref[i - 1] + vec[i];
+    }
+    for(int del = 0; del <= k; ++del)
+    {
+        sum = max(sum, (ll) (pref[n - del - min(x, n - del)] - (pref[n - del] - pref[n - del - min(x, n - del)])));
+    }
+    cout << sum << endl;
 }
 int32_t main()
 {

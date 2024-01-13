@@ -19,13 +19,30 @@ using ld = long double;
 
 void solve()
 {
-    int a, b;
-    cin >> a >> b;
-    if((a + b) % 2 == 0)
+    int n;
+    cin >> n;
+    vector<int> ogr;
+    int l = INT_MIN;
+    int r = INT_MAX;
+    for(int i = 0; i < n; ++i)
     {
-        cout << "Bob\n";
+        int type;
+        cin >> type;
+        int x;
+        cin >> x;
+        if(type == 3)
+        {
+            if(x <= r && x >= l) ogr.pb(x);
+        }
+        else if(type == 1) l = max(l, x);
+        else r = min(r, x);
     }
-    else cout << "Alice\n";
+    make_unique(ogr);
+    auto ptrL = lower_bound(all(ogr), l);
+    auto ptrR = upper_bound(all(ogr), r);
+    // cout << ptrR - ptrL << endl;
+    cout << max(0, r - l + 1) - max((int64_t) (ptrR - ptrL), 0ll) << endl;
+
 }
 int32_t main()
 {
