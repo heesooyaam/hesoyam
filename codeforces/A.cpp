@@ -19,30 +19,13 @@ using ld = long double;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<int> ogr;
-    int l = INT_MIN;
-    int r = INT_MAX;
-    for(int i = 0; i < n; ++i)
-    {
-        int type;
-        cin >> type;
-        int x;
-        cin >> x;
-        if(type == 3)
-        {
-            if(x <= r && x >= l) ogr.pb(x);
-        }
-        else if(type == 1) l = max(l, x);
-        else r = min(r, x);
-    }
-    make_unique(ogr);
-    auto ptrL = lower_bound(all(ogr), l);
-    auto ptrR = upper_bound(all(ogr), r);
-    // cout << ptrR - ptrL << endl;
-    cout << max(0, r - l + 1) - max((int64_t) (ptrR - ptrL), 0ll) << endl;
-
+    int x1, x2, x3, x4, y1, y2, y3, y4;
+    cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
+    int Xmn = min({x1, x2, x3, x4});
+    int Xmx = max({x1, x2, x3, x4});
+    int Ymn = min({y1, y2, y3, y4});
+    int Ymx = max({y1, y2, y3, y4});
+    cout << (Ymx - Ymn) * (Xmx - Xmn) << endl;
 }
 int32_t main()
 {

@@ -15,39 +15,23 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'
-int n;   
-int go(vector<int>& vec, int div)
-{
-    int k = n / div;
-    int nod = 0;
-    for(int q = 0; q < div && nod != 1; ++q)
-    {
-        for(int m = 1; m < k && nod != 1; ++m)
-        {
-            nod = gcd(nod, abs(vec[div * m + q] - vec[div * (m - 1) + q]));
-        }
-    }
-    return int(nod != 1);
-}
+#define endl '\n'   
+
 void solve()
 {
-    cin >> n;
-    vector<int> vec(n);
-    input(vec);
-    ll ans = 0;
-    // cout << n << "'divisors: ";
-    for(int div = 1; div * div <= n; ++div)
+    ll n, f , a, b;
+    cin >> n >> f >> a >> b;
+
+    vector<int> t(n + 1, 0);
+    for(int i = 1; i < n + 1; ++i) cin >> t[i];
+
+    for(int i = 0; i < n && f > 0; ++i)
     {
-        if(n % div) continue;
-        // cout << div << ", "; 
-        ans += go(vec, div);
-        if(div * div == n) continue;
-        // cout << n / div << ", ";
-        ans += go(vec, n / div);
+        f -= min(a * (t[i + 1] - t[i]), b);    
     }
-    // cout << endl << "points = ";
-    cout << ans << endl;    
+    // cout << "battary = " << f << endl;
+    if(f > 0) cout << "YES\n";
+    else cout << "NO\n";
 }
 int32_t main()
 {

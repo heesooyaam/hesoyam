@@ -3,7 +3,7 @@ using namespace std;
 using ll = long long;
 using ull = unsigned long long;
 using ld = long double;
-#define eb emplace_back
+// #define eb emplace_back
 #define pb push_back
 #define pf push_front
 #define ppb pop_back
@@ -19,7 +19,54 @@ using ld = long double;
 
 void solve()
 {
+    int n, m;
+    cin >> n >> m;
+    multiset<ll> a, b;
+    for(int i = 0; i < n; ++i)
+    {
+        ll x;
+        cin >> x;
+        a.insert(x);
+    }
+    for(int i = 0; i < m; ++i)
+    {
+        ll x;
+        cin >> x;
+        b.insert(x);
+    }
     
+    // print(a);
+    ll ans = 0;
+    for(int i = 0; i < n; ++i)
+    {
+        ll bb = abs(*a.begin() - *b.begin());
+        ll be = abs(*a.begin() - *prev(b.end()));
+        ll ee = abs(*prev(a.end()) - *prev(b.end()));
+        ll eb = abs(*prev(a.end()) - *b.begin());
+        ll mx = max({bb, be, ee, eb});
+        ans += mx;
+        if(mx == bb)
+        {
+            a.erase(a.begin());
+            b.erase(b.begin());
+        }
+        else if(mx == be)
+        {
+            a.erase(a.begin());
+            b.erase(prev(b.end()));
+        }
+        else if(mx == ee)
+        {
+            a.erase(prev(a.end()));
+            b.erase(prev(b.end()));
+        }
+        else
+        {
+            a.erase(prev(a.end()));
+            b.erase(b.begin());
+        }
+    }
+    cout << ans << endl;
 }
 int32_t main()
 {

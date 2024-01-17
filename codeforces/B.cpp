@@ -19,25 +19,26 @@ using ld = long double;
 
 void solve()
 {
-    int n, k, x;
-    cin >> n >> k >> x;
-    vector<int> vec(n + 1);
-    for(int i = 1; i <= n; ++i)
+    int n;
+    cin >> n;
+    string s;
+    string q;
+    cin >> s >> q;
+    int have = 0;
+    int need = 0;
+    int time = 0;
+    for(int i = 0; i < n; ++i)
     {
-        cin >> vec[i];
+        if(s[i] == q[i]) continue;
+
+        if(s[i] == '1') ++have;
+        else ++need;
     }
-    sort(all(vec));
-    ll sum = INT_MIN;
-    vector<int> pref(n + 1);
-    for(int i = 1; i < n + 1; ++i)
-    {
-        pref[i] = pref[i - 1] + vec[i];
-    }
-    for(int del = 0; del <= k; ++del)
-    {
-        sum = max(sum, (ll) (pref[n - del - min(x, n - del)] - (pref[n - del] - pref[n - del - min(x, n - del)])));
-    }
-    cout << sum << endl;
+
+    if(need >= have) time = need;
+    else time = have;
+
+    cout << time << endl;
 }
 int32_t main()
 {
