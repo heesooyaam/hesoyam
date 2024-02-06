@@ -3,7 +3,7 @@ using namespace std;
 using ll = long long;
 using ull = unsigned long long;
 using ld = long double;
-// #define eb emplace_back
+#define eb emplace_back
 #define pb push_back
 #define pf push_front
 #define ppb pop_back
@@ -15,58 +15,44 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
+#define endl '\n'  
+
+int n, len;
+bool ok(vector<ll>& vec, double& d)
+{
+    if(1.0 * vec[0] > d || 1.0 * (len - vec.back()) > d) return false;
+    for(int i = 1; i < vec.size(); ++i)
+    {
+        if(1.0 * (vec[i] - vec[i - 1]) > 2 * d)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    multiset<ll> a, b;
-    for(int i = 0; i < n; ++i)
+    cin >> n >> len;
+    vector<ll> lamps(n);
+    input(lamps);
+    sort(all(lamps));
+    int T = 50;
+    double l, r;
+    l = 0; r = 2e9;
+    while(T--)
     {
-        ll x;
-        cin >> x;
-        a.insert(x);
-    }
-    for(int i = 0; i < m; ++i)
-    {
-        ll x;
-        cin >> x;
-        b.insert(x);
-    }
-    
-    // print(a);
-    ll ans = 0;
-    for(int i = 0; i < n; ++i)
-    {
-        ll bb = abs(*a.begin() - *b.begin());
-        ll be = abs(*a.begin() - *prev(b.end()));
-        ll ee = abs(*prev(a.end()) - *prev(b.end()));
-        ll eb = abs(*prev(a.end()) - *b.begin());
-        ll mx = max({bb, be, ee, eb});
-        ans += mx;
-        if(mx == bb)
+        double mid = (l + r) / 2;
+        if(ok(lamps, mid))
         {
-            a.erase(a.begin());
-            b.erase(b.begin());
-        }
-        else if(mx == be)
-        {
-            a.erase(a.begin());
-            b.erase(prev(b.end()));
-        }
-        else if(mx == ee)
-        {
-            a.erase(prev(a.end()));
-            b.erase(prev(b.end()));
+            r = mid;
         }
         else
         {
-            a.erase(prev(a.end()));
-            b.erase(b.begin());
+            l = mid;
         }
     }
-    cout << ans << endl;
+    cout << fixed << setprecision(10) << l << endl;
 }
 int32_t main()
 {
@@ -74,7 +60,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1; 
-    cin >> ttest;
+    // cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

@@ -21,24 +21,27 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    string q;
-    cin >> s >> q;
-    int have = 0;
-    int need = 0;
-    int time = 0;
+    vector<int> vec(n);
+    input(vec);
+    vector<int> cnt(n + 1, 0);
     for(int i = 0; i < n; ++i)
     {
-        if(s[i] == q[i]) continue;
-
-        if(s[i] == '1') ++have;
-        else ++need;
+        cnt[vec[i]] += 1;
     }
-
-    if(need >= have) time = need;
-    else time = have;
-
-    cout << time << endl;
+    vector<int> num(n + 2);
+    for(int k = n; k >= 1; --k)
+    {
+        num[k] = cnt[k] + cnt[k + 1];
+    }
+    sort(num.begin() + 1, num.end() - 1);
+    ll ans = 1;
+    int cur = num[1];
+    for(int i = 1; i < n + 2; ++i)
+    {
+        int cnt = upper_bound(num.begin() + 1, num.end() - 1, prev) - (num.begin() + i);
+        ans *= 1ll * prev
+        i = upper_bound(num.begin() + 1, num.end() - 1, prev) - (num.begin() + 1);
+    }
 }
 int32_t main()
 {
@@ -46,7 +49,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1; 
-    cin >> ttest;
+    // cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

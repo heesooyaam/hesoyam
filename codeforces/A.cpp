@@ -19,13 +19,18 @@ using ld = long double;
 
 void solve()
 {
-    int x1, x2, x3, x4, y1, y2, y3, y4;
-    cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> x4 >> y4;
-    int Xmn = min({x1, x2, x3, x4});
-    int Xmx = max({x1, x2, x3, x4});
-    int Ymn = min({y1, y2, y3, y4});
-    int Ymx = max({y1, y2, y3, y4});
-    cout << (Ymx - Ymn) * (Xmx - Xmn) << endl;
+    ll n, a, b;
+    cin >> n >> a >> b;
+    if(a > n || b > n * (n + 1) / 2)
+    {
+        cout << "No" << endl;
+        return;
+    }
+    if(((n + 1) / 2 - max(0ll, a - n / 2)) * (n - a) < b) 
+    {
+        cout << "No" << endl;
+    } 
+    else cout << "Yes" << endl;
 }
 int32_t main()
 {

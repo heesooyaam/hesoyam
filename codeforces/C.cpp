@@ -16,22 +16,28 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'   
-
+#define int int64_t
 void solve()
 {
-    ll n, f , a, b;
-    cin >> n >> f >> a >> b;
-
-    vector<int> t(n + 1, 0);
-    for(int i = 1; i < n + 1; ++i) cin >> t[i];
-
-    for(int i = 0; i < n && f > 0; ++i)
+    int n;
+    cin >> n;
+    vector<int> vec1(n + 1, 0);
+    vector<int> vec(n + 1, 0);
+    for(int i = 1; i <= n; ++i)
     {
-        f -= min(a * (t[i + 1] - t[i]), b);    
+        cin >> vec[i];
+        vec1[i] = vec[i];
+        vec[i] += vec[i - 1];
     }
-    // cout << "battary = " << f << endl;
-    if(f > 0) cout << "YES\n";
-    else cout << "NO\n";
+    int mn = *min_element(vec.begin(), vec.end());
+    vec1[0] = mn * (-1);
+    // print(vec1);
+    for(int i = 1; i <= n; ++i)
+    {
+        // cin >> vec[i];
+        vec1[i] += vec1[i - 1];
+    }
+    cout << vec1.back() << endl;
 }
 int32_t main()
 {
@@ -39,7 +45,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1; 
-    cin >> ttest;
+    // cin >> ttest;
     while(ttest--) solve();
     return 0;
 }
