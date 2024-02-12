@@ -19,17 +19,26 @@ using ld = long double;
 
 void solve()
 {
-    int a, b;
-    cin >> a >> b;
-
-    int mx = max(a, b);
-    int mn = min(a, b);
-    if(mx == 2 * mn && mn % 2 == 1 || (mx % 2 + mn % 2 == 2))
+    int n;
+    cin >> n;
+    vector<int> vec;
+    for(int i = 0; i < n; ++i)
     {
-        cout << "NO\n";
-        return;
+        int type;
+        cin >> type;
+        if(type == 1)
+        {
+            int x;
+            cin >> x;
+            vec.pb(x);
+        }
+        else
+        {
+            int k;
+            cin >> k;
+            cout << vec[vec.size() - k] << endl;
+        }
     }
-    else cout << "YES\n";
 }
 int32_t main()
 {
@@ -37,7 +46,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1; 
-    cin >> ttest;
+    // cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

@@ -19,7 +19,32 @@ using ld = long double;
 
 void solve()
 {
-    
+    int n, k;
+    cin >> n >> k;
+    vector<int> p(n + 1);
+    int mx = n;
+    int mn = 1;
+
+    for(int i = 1; i <= k; ++i)
+    {
+        for(int q = 0; q * k + i <= n; ++q)
+        {
+            int pos = q * k + i;
+            if(i & 1)
+            {
+                p[pos] = mx--;
+            }
+            else
+            {
+                p[pos] = mn++;
+            }
+        }
+    }
+    for(int i = 1; i < n + 1; ++i)
+    {
+        cout << p[i] << ' ';
+    }
+    cout << endl;
 }
 int32_t main()
 {

@@ -19,17 +19,32 @@ using ld = long double;
 
 void solve()
 {
-    int a, b;
-    cin >> a >> b;
-
-    int mx = max(a, b);
-    int mn = min(a, b);
-    if(mx == 2 * mn && mn % 2 == 1 || (mx % 2 + mn % 2 == 2))
+    ull x;
+    cin >> x;
+    ull num = x;
+    ll ans = 0;
+    map<ull, ll> cnt;
+    cnt[x] = 1;
+    while(cnt[1] != num)
     {
-        cout << "NO\n";
-        return;
+        ull val = prev(cnt.end())->ff;
+        ll amt = prev(cnt.end())->ss;
+        if(val == 1) break;
+        if(val & 1)
+        {
+            cnt[val / 2] += amt;
+            cnt[val / 2 + 1] += amt;
+            ans += val * amt;
+        }
+        else
+        {
+            cnt[val / 2] += amt * 2;
+            ans += amt * val;
+        }
+        cnt.erase(prev(cnt.end()));
     }
-    else cout << "YES\n";
+
+    cout << ans << endl;
 }
 int32_t main()
 {
@@ -37,7 +52,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1; 
-    cin >> ttest;
+    // cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

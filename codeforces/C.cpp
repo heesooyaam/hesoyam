@@ -16,28 +16,49 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'   
-#define int int64_t
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<int> vec1(n + 1, 0);
-    vector<int> vec(n + 1, 0);
-    for(int i = 1; i <= n; ++i)
+    ll pos, x;
+    cin >> pos >> x;
+    --pos;
+    set<ll> st;
+    ll fwd = pos + (x - 1);
+    ll back = pos - (x - 1);
+    cout << "divisors of " << fwd << ": ";
+    for(ll i = 1; i * i <= fwd; ++i)
     {
-        cin >> vec[i];
-        vec1[i] = vec[i];
-        vec[i] += vec[i - 1];
+        if(fwd % i) continue;
+        cout << fwd / i << ", " << i << ", ";
+        ll k1 = -1, k2 = -1;
+        
+        if(i % 2 == 0) k1 = i / 2 + 1;
+        if((fwd / i) % 2 == 0) k2 = fwd / i / 2 + 1;
+
+        for(auto& k : {k1, k2})
+        {
+            if(k != -1 && k != 1) st.insert(k);
+        }
     }
-    int mn = *min_element(vec.begin(), vec.end());
-    vec1[0] = mn * (-1);
-    // print(vec1);
-    for(int i = 1; i <= n; ++i)
+    cout << endl;
+    cout << "divisors of " << back << ": ";
+    for(ll i = 1; i * i <= back; ++i)
     {
-        // cin >> vec[i];
-        vec1[i] += vec1[i - 1];
+        if(back % i) continue;
+        cout << back / i << ", " << i << ", ";
+        ll k1 = -1, k2 = -1;
+        
+        if(i % 2 == 0) k1 = i / 2 + 1;
+        if((back / i) % 2 == 0) k2 = back / i / 2 + 1;
+
+        for(auto& k : {k1, k2})
+        {
+            if(k != -1 && k != 1) st.insert(k);
+        }
     }
-    cout << vec1.back() << endl;
+    cout << endl;
+    cout << "k's: "; print(st);
+    cout << st.size() << endl;
 }
 int32_t main()
 {
@@ -45,7 +66,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1; 
-    // cin >> ttest;
+    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }
