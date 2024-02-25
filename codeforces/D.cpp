@@ -12,100 +12,62 @@ using ld = long double;
 #define ff first
 #define mp make_pair
 #define all(x) (x).begin(),(x).end()
+#define rall(x) (x).rbegin(),(x).rend()
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'   
-
-struct PairTree
-{
-    struct Node
-    {
-        bool found = false;
-        map<int, int> pos;
-    };
-    
-    PairTree(const vector<int>& vec)
-    {
-        n = vec.size();
-        tree.assign(n * 4, Node());
-        build(vec);
-    }
-    PairTree(size_t size)
-    {
-        n = size;
-        tree.assign(4 * n, Node());
-    }
-    void build(const vector<int>& vec)
-    {
-        build(0, 0, n, vec);
-    }
-    pair<int, int> hasPair(int l, int r)
-    {
-        Node res = hasPair(0, l, r, 0, n);
-        if(!res.found) return {-1, -1};
-        else return {res.pos.begin()->ss + 1, prev(res.pos.end())->ss + 1};
-    }
-private:
-    int n;
-    vector<Node> tree;
-    Node combine(const Node a, const Node b) const
-    {
-        if(a.found == true) return a;
-        if(b.found == true) return b;
-        Node ab;
-        for(auto& [val, position] : a.pos)
-        {
-            ab.pos[val] = position;
-        }
-        for(auto& [val, position] : b.pos)
-        {
-            ab.pos[val] = position;
-        }
-
-        if(ab.pos.size() > 1) ab.found = true;
-
-        return ab;
-    }
-    void build(int idx, int l, int r, const vector<int>& vec)
-    {
-        if(l + 1 == r)
-        {
-            tree[idx].pos[vec[l]] = l;
-            return;
-        }
-        int mid = (l + r) / 2;
-        build(idx * 2 + 1, l, mid, vec);
-        build(idx * 2 + 2, mid, r, vec);
-        tree[idx] = combine(tree[idx * 2 + 1], tree[idx * 2 + 2]);
-    }
-    Node hasPair(int idx, int l, int r, int curL, int curR)
-    {
-        if(l >= r) return Node();
-        if(l == curL && r == curR) return tree[idx];
-        
-        int mid = (curL + curR) / 2;
-
-        return combine(hasPair(idx * 2 + 1, l, min(r, mid), curL, mid), hasPair(idx * 2 + 2, max(l, mid), r, mid, curR));
-    }
-};
-
 void solve()
 {
     int n;
     cin >> n;
-    vector<int> vec(n);
-    input(vec);
-    int m;
-    cin >> m;
-    PairTree ST(vec);
-    for(int i = 0; i < m; ++i)
+    vector<ll> vec(n + 1);
+    for(int i = 1; i < n + 1; ++i)
     {
-        int l, r;
-        cin >> l >> r;
-        auto ans = ST.hasPair(l - 1, r);
-        cout << ans.ff << ' ' << ans.ss << endl;
+        cin >> vec[i];
     }
+    vector<ll> dp(n + 1, 0);
+    vector<ll> sum;
+    ll add = 0;
+    for(int i = 1; i < n + 1; ++i)
+    {
+        if(upper_bound(rall(sum), vec[i] - add) == sum.rend())
+        {
+            dp[i] = -1;
+            sum.clear();
+            sum.pb(vec[i]);
+            add = 0;
+        } 
+        else
+        {
+            dp[i] = upper_bound(rall(sum), vec[i] - add) - sum.rbegin() + 1;
+            sum.pb(sum.back() + vec[i]);
+            add += vec[i];
+        }
+    }
+    sum.clear();
+    // print(dp);
+    add = 0;
+    for(int i = n; i >= 1; --i)
+    {
+        if(upper_bound(rall(sum), vec[i]) == sum.rend())
+        {
+            sum.clear();
+            sum.pb(vec[i]);
+            add = 0;
+        } 
+        else
+        {
+            dp[i] = min(((dp[i] == -1) ? numeric_limits<ll>::max() : dp[i]), upper_bound(rall(sum), vec[i]) - sum.rbegin() + 1);
+            sum.pb(sum.back() + vec[i]);
+            add += vec[i];
+        }
+    }
+    for(int i = 1; i < n + 1; ++i)
+    {
+        cout << dp[i] << ' ';
+    }
+    cout << endl;
 }
 int32_t main()
 {

@@ -21,23 +21,20 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<int> vec;
-    for(int i = 0; i < n; ++i)
+    vector<int> placeOfPerson(n);
+    for(int i = 0; i < n; ++i){
+        int x;
+        cin >> x;
+        placeOfPerson[x] = i;
+    }
+    int q;
+    cin >> q;
+    for(int i = 0; i < q; ++i)
     {
-        int type;
-        cin >> type;
-        if(type == 1)
-        {
-            int x;
-            cin >> x;
-            vec.pb(x);
-        }
-        else
-        {
-            int k;
-            cin >> k;
-            cout << vec[vec.size() - k] << endl;
-        }
+        int a, b;
+        cin >> a >> b;
+        if(placeOfPerson[a] < placeOfPerson[b]) cout << a << endl;
+        else cout << b << endl;    
     }
 }
 int32_t main()

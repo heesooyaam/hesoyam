@@ -19,46 +19,29 @@ using ld = long double;
 
 void solve()
 {
-    ll pos, x;
-    cin >> pos >> x;
-    --pos;
-    set<ll> st;
-    ll fwd = pos + (x - 1);
-    ll back = pos - (x - 1);
-    cout << "divisors of " << fwd << ": ";
-    for(ll i = 1; i * i <= fwd; ++i)
+    int n, q;
+    cin >> n >> q;
+    vector<ll> vec(n + 1);
+    for(int i = 1; i < n + 1; ++i) cin >> vec[i];
+    vector<ll> cnt1(n + 1), cnt(n + 1);
+    for(int i = 1; i < n + 1; ++i)
     {
-        if(fwd % i) continue;
-        cout << fwd / i << ", " << i << ", ";
-        ll k1 = -1, k2 = -1;
-        
-        if(i % 2 == 0) k1 = i / 2 + 1;
-        if((fwd / i) % 2 == 0) k2 = fwd / i / 2 + 1;
-
-        for(auto& k : {k1, k2})
-        {
-            if(k != -1 && k != 1) st.insert(k);
-        }
+        cnt1[i] = cnt1[i - 1] + (vec[i] == 1);
+        cnt[i] = cnt[i - 1] + (vec[i] - 1);
     }
-    cout << endl;
-    cout << "divisors of " << back << ": ";
-    for(ll i = 1; i * i <= back; ++i)
+    for(int i = 0; i < q; ++i)
     {
-        if(back % i) continue;
-        cout << back / i << ", " << i << ", ";
-        ll k1 = -1, k2 = -1;
-        
-        if(i % 2 == 0) k1 = i / 2 + 1;
-        if((back / i) % 2 == 0) k2 = back / i / 2 + 1;
-
-        for(auto& k : {k1, k2})
+        int l, r;
+        cin >> l >> r;
+        if(l == r)
         {
-            if(k != -1 && k != 1) st.insert(k);
+            cout << "NO\n";
+            continue;
         }
+
+        if(cnt1[r] - cnt1[l - 1] > cnt[r] - cnt[l - 1]) cout << "NO\n";
+        else cout << "YES\n";   
     }
-    cout << endl;
-    cout << "k's: "; print(st);
-    cout << st.size() << endl;
 }
 int32_t main()
 {

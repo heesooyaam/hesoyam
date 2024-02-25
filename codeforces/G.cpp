@@ -16,48 +16,49 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'   
-
-struct SumTree
+ll ans = 0;
+bool dfs(vector<vector<int>>& g, string& st, vector<bool>& used, vector<bool>& good, int cur, int prev)
 {
-private:
-    int n;
-    ll def;
-    vector<ll> tree;
-    void build(int idx, int l, int r)
+    used[cur] = true;
+    for(auto& to : g[cur])
     {
-        if(l + 1 == r)
-        {
-            tree[idx] = def;
-            return; 
-        }
+        if(to == prev || st[to] == 'P') continue;
 
-        int mid = (l + r) / 2;
-
-        build(idx * 2 + 1, l, mid);
-        build(idx * 2 + 2, mid, r);
-
-        tree[idx] = tree[idx * 2 + 1] + tree[idx * 2 + 2];
+        good[cur] = dfs(g, st, used, good, to, cur);
     }
-    void build(int idx, int l, int r, const vector<ll>& vec)
-    {
-        if(l + 1 == r)
-        {
-            tree[idx] = vec[l];
-            return; 
-        }
-
-        int mid = (l + r) / 2;
-
-        build(idx * 2 + 1, l, mid, vec);
-        build(idx * 2 + 2, mid, r, vec);
-
-        tree[idx] = tree[idx * 2 + 1] + tree[idx * 2 + 2];
-    }
-};
-
+}
 void solve()
 {
-    
+    int n;
+    cin >> n;
+    vector<vector<int>> g(n + 1);
+    for(int i = 1; i < n; ++i)
+    {
+        int vertex;
+        cin >> vertex;
+        g[i + 1].pb(vertex);
+        g[vertex].pb(i + 1);
+    }
+    string st = " ";
+    string q;
+    cin >> q;
+    st += q;
+    int root;
+    for(int i = 1; i < n + 1; ++i)
+    {
+        if(g[i].size() == 1)
+        {
+            root = i;
+            break;
+        }
+    }
+    vector<bool> used(n + 1, false);
+    for(int i = 1; i < n + 1; ++i)
+    {
+        if(used[i] || st[i] != 'C') continue;
+        dfs(g, st, used, i, -1);
+    }
+    cout << ans << endl;
 }
 int32_t main()
 {

@@ -19,7 +19,18 @@ using ld = long double;
 
 void solve()
 {
-    
+    string s;
+    cin >> s;
+    char need = (s[0] == s[1]) ? s[0] : (s[1] == s[2]) ? s[1] : s[2];
+    for(int i = 0; i < s.size(); ++i)
+    {
+        if(s[i] != need) 
+        {
+        cout << i + 1;
+        return;
+
+        }
+    }
 }
 int32_t main()
 {

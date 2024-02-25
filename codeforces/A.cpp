@@ -19,17 +19,35 @@ using ld = long double;
 
 void solve()
 {
-    int a, b;
-    cin >> a >> b;
-
-    int mx = max(a, b);
-    int mn = min(a, b);
-    if(mx == 2 * mn && mn % 2 == 1 || (mx % 2 + mn % 2 == 2))
+    int n;
+    cin >> n;
+    vector<int> vec(n);
+    int cnt1 = 0;
+    for(int i = 0; i < n; ++i)
     {
-        cout << "NO\n";
+        cin >> vec[i];
+        cnt1 += vec[i] == 1;
+    }
+    if(cnt1 == 1) 
+    {
+        cout << 0 << endl;
         return;
     }
-    else cout << "YES\n";
+    int start = find(all(vec), 1) - vec.begin();
+    int end = n - 1;
+    for(; end >= 0; --end)
+    {
+        if(vec[end] == 1) break;
+    }
+    ll ans = 0;
+    for(int i = start; i < end; ++i)
+    {
+        if(vec[i] == 0)
+        {
+            ++ans;
+        }
+    }
+    cout << ans << endl;
 }
 int32_t main()
 {

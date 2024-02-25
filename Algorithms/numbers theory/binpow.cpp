@@ -15,32 +15,39 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
-bool isSQRT(ll val)
+#define endl '\n'  
+
+template<typename T>
+ll binpow(T val, unsigned int n, const ll MOD = 1e9 + 7)
 {
-    ll sq = sqrt(val);
-    if(sq * sq != val && (sq + 1) * (sq + 1) != val) return false;
-    else return true;
+    ll ans = 1;
+    ll cur = val;
+    while(n)
+    {
+        if(n & 1)
+        {
+            ans *= cur;
+            ans %= MOD;
+        }
+        cur *= cur;
+        cur %= MOD;
+        n >>= 1;
+    }
+    return ans;
 }
+template<typename T>
+ll recBinPow(T val, unsigned int n, const ll MOD = 1e9 + 7)
+{
+    if(n == 0) return 1;
+
+    ll t = recBinPow(val, n >> 1, MOD);
+
+    if(n & 1) return (((t * val) % MOD) * t) % MOD;
+    else return (t * t) % MOD;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<ll> vec(n);
-    input(vec);
-    sort(all(vec));
-    ll ans = 0;
-    vector<ll> dp(n + 1);
-    for(int i = 0; i < n - 1; ++i)
-    {
-        if(isSQRT(vec[i] * vec[i + 1]))
-        {
-            dp[i + 1] = 1 + dp[i];
-            ans += dp[i + 1];
-        }
-    }
-    cout << ans << endl;
-    
 }
 int32_t main()
 {

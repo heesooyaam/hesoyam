@@ -1,4 +1,4 @@
-"": {
+{"": {
 	"prefix": "safe_hash",
 	"body": [
 	  "struct custom_hash",
@@ -19,3 +19,4 @@
 	],
 	"description": ""
   }
+}

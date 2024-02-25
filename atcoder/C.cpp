@@ -19,32 +19,31 @@ using ld = long double;
 
 void solve()
 {
-    ull x;
-    cin >> x;
-    ull num = x;
-    ll ans = 0;
-    map<ull, ll> cnt;
-    cnt[x] = 1;
-    while(cnt[1] != num)
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    vector<char> alph(26 + 1);
+    for(int i = 0; i + 'a' <= 'z'; ++i)
     {
-        ull val = prev(cnt.end())->ff;
-        ll amt = prev(cnt.end())->ss;
-        if(val == 1) break;
-        if(val & 1)
-        {
-            cnt[val / 2] += amt;
-            cnt[val / 2 + 1] += amt;
-            ans += val * amt;
-        }
-        else
-        {
-            cnt[val / 2] += amt * 2;
-            ans += amt * val;
-        }
-        cnt.erase(prev(cnt.end()));
+        alph[i] = i + 'a';
     }
-
-    cout << ans << endl;
+    int q;
+    cin >> q;
+    for(int i = 0; i < q; ++i)
+    {
+        char from, to;
+        cin >> from >> to;
+        for(int j = 0; j + 'a' <= 'z'; ++j)
+        {
+            if(alph[j] == from) alph[j] = to;
+        }
+    }
+    for(int i = 0; i < n; ++i)
+    {
+        s[i] = alph[s[i] - 'a'];
+    }
+    cout << s << endl;
 }
 int32_t main()
 {
