@@ -19,29 +19,63 @@ using ld = long double;
 
 void solve()
 {
-    int n, q;
-    cin >> n >> q;
-    vector<ll> vec(n + 1);
-    for(int i = 1; i < n + 1; ++i) cin >> vec[i];
-    vector<ll> cnt1(n + 1), cnt(n + 1);
+    int n, k;
+    cin >> n >> k;
+    vector<vector<int>> g(n + 1);
+    for(int i = 0; i < n - 1; ++i)
+    {
+        int from, to;
+        cin >> from >> to;
+        g[from].pb(to);
+        g[to].pb(from);
+    }
+
+    int root;
     for(int i = 1; i < n + 1; ++i)
     {
-        cnt1[i] = cnt1[i - 1] + (vec[i] == 1);
-        cnt[i] = cnt[i - 1] + (vec[i] - 1);
-    }
-    for(int i = 0; i < q; ++i)
-    {
-        int l, r;
-        cin >> l >> r;
-        if(l == r)
+        if(g[i].size() == 1)
         {
-            cout << "NO\n";
-            continue;
+            root = i;
+            break;
         }
-
-        if(cnt1[r] - cnt1[l - 1] > cnt[r] - cnt[l - 1]) cout << "NO\n";
-        else cout << "YES\n";   
     }
+    
+    int l = 1; int r = n / (k + 1) + 1;
+    function<int(int&, int, int, int)> dfs = [&](int& cnt, int cur, int prev, int x)->int
+    {
+        int size = 1;
+        for(auto& to : g[cur])
+        {
+            if(to == prev) continue;
+            int childs = dfs(cnt, to, cur, x);
+            if(childs >= x)
+            {
+                ++cnt;
+            }
+            else
+            {
+                size += childs;
+            }
+        }
+        return size;
+    };
+
+    while(l + 1 < r)
+    {
+        int mid = (l + r) / 2;
+        int cnt = 0;
+        cnt += dfs(cnt, root, -1, mid) >= mid;
+        if(cnt < k + 1)
+        {
+            r = mid;
+        }
+        else
+        {
+            l = mid;
+        }
+    }
+    cout << l << endl;
+    
 }
 int32_t main()
 {

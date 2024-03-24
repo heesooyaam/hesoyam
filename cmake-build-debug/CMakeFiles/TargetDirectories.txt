@@ -1,0 +1,3 @@
+D:/Base/Desktop/IT/hesoyam/cmake-build-debug/CMakeFiles/cliong.exe.dir
+D:/Base/Desktop/IT/hesoyam/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/Base/Desktop/IT/hesoyam/cmake-build-debug/CMakeFiles/rebuild_cache.dir

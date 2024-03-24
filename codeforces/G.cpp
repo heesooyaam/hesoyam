@@ -16,49 +16,23 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'   
-ll ans = 0;
-bool dfs(vector<vector<int>>& g, string& st, vector<bool>& used, vector<bool>& good, int cur, int prev)
-{
-    used[cur] = true;
-    for(auto& to : g[cur])
-    {
-        if(to == prev || st[to] == 'P') continue;
 
-        good[cur] = dfs(g, st, used, good, to, cur);
+struct series
+{
+    string name;
+    void foo()
+    {
+        // Console.WriteLine($"my name is {name}");
+        cout << "my name is " << name << endl;
     }
-}
+};
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<vector<int>> g(n + 1);
-    for(int i = 1; i < n; ++i)
-    {
-        int vertex;
-        cin >> vertex;
-        g[i + 1].pb(vertex);
-        g[vertex].pb(i + 1);
-    }
-    string st = " ";
-    string q;
-    cin >> q;
-    st += q;
-    int root;
-    for(int i = 1; i < n + 1; ++i)
-    {
-        if(g[i].size() == 1)
-        {
-            root = i;
-            break;
-        }
-    }
-    vector<bool> used(n + 1, false);
-    for(int i = 1; i < n + 1; ++i)
-    {
-        if(used[i] || st[i] != 'C') continue;
-        dfs(g, st, used, i, -1);
-    }
-    cout << ans << endl;
+    series ser1 = {.name = "Stranger Things"};
+    series ser2 = {.name = "Paper house"};
+    ser1.foo();
+    ser2.foo();
 }
 int32_t main()
 {

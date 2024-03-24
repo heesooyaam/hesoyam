@@ -22,32 +22,14 @@ void solve()
     int n;
     cin >> n;
     vector<int> vec(n);
-    int cnt1 = 0;
-    for(int i = 0; i < n; ++i)
-    {
-        cin >> vec[i];
-        cnt1 += vec[i] == 1;
-    }
-    if(cnt1 == 1) 
-    {
-        cout << 0 << endl;
-        return;
-    }
-    int start = find(all(vec), 1) - vec.begin();
-    int end = n - 1;
-    for(; end >= 0; --end)
-    {
-        if(vec[end] == 1) break;
-    }
-    ll ans = 0;
-    for(int i = start; i < end; ++i)
-    {
-        if(vec[i] == 0)
-        {
-            ++ans;
-        }
-    }
-    cout << ans << endl;
+    input(vec);
+    vec.pb(-1);
+    vector<int> sorted = vec;
+    sort(all(sorted));
+    int idx = n / 2 + n % 2;
+    // cout << (lower_bound(all(sorted), sorted[idx]) - sorted.begin()) << endl;
+    // cout << upper_bound(all(sorted), sorted[idx]) - sorted.begin() << endl;
+    cout << upper_bound(all(sorted), sorted[idx]) - sorted.begin() - idx<< endl;
 }
 int32_t main()
 {

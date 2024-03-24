@@ -17,10 +17,19 @@ using ld = long double;
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'   
 
-
 void solve()
 {
-    
+    int h, w, m;
+    cin >> h >> w >> m;
+    vector<int> column(w + 1, 0);
+    map<ll, ll> col;
+    col[0] = 1ll * h * w;
+    for(int i = 0; i < m; ++i)
+    {
+        int t;
+        cin >> t;
+        
+    }
 }
 int32_t main()
 {
@@ -28,7 +37,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1; 
-    // cin >> ttest;
+    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

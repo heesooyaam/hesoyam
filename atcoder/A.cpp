@@ -19,17 +19,13 @@ using ld = long double;
 
 void solve()
 {
-    string s;
-    cin >> s;
-    char need = (s[0] == s[1]) ? s[0] : (s[1] == s[2]) ? s[1] : s[2];
-    for(int i = 0; i < s.size(); ++i)
+    int n;
+    cin >> n;
+    vector<ll> vec(n);
+    input(vec);
+    for(int i = 0; i < n - 1; ++i)
     {
-        if(s[i] != need) 
-        {
-        cout << i + 1;
-        return;
-
-        }
+        cout << vec[i] * vec[i + 1] << ' ';
     }
 }
 int32_t main()

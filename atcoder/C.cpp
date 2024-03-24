@@ -19,31 +19,24 @@ using ld = long double;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vector<char> alph(26 + 1);
-    for(int i = 0; i + 'a' <= 'z'; ++i)
-    {
-        alph[i] = i + 'a';
-    }
-    int q;
-    cin >> q;
-    for(int i = 0; i < q; ++i)
-    {
-        char from, to;
-        cin >> from >> to;
-        for(int j = 0; j + 'a' <= 'z'; ++j)
-        {
-            if(alph[j] == from) alph[j] = to;
-        }
-    }
+    ll n, k;
+    cin >> n >> k;
+    set<ll> st;
+    ll sum = ((1 + k) * k) / 2;
+    // cout << sum << endl;
     for(int i = 0; i < n; ++i)
     {
-        s[i] = alph[s[i] - 'a'];
+        ll x;
+        cin >> x;
+        if(x <= k && st.find(x) != st.end()) continue;
+        // cout << x << endl;
+        if(x <= k)
+        {
+            sum -= x;
+            st.insert(x);
+        }
     }
-    cout << s << endl;
+    cout << sum << endl;
 }
 int32_t main()
 {
