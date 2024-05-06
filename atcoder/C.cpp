@@ -15,36 +15,30 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
+#define endl '\n'
 
 void solve()
 {
-    ll n, k;
-    cin >> n >> k;
-    set<ll> st;
-    ll sum = ((1 + k) * k) / 2;
-    // cout << sum << endl;
+    int n;
+    cin >> n;
+    ll height = 0;
+    ll d = 0;
     for(int i = 0; i < n; ++i)
     {
-        ll x;
-        cin >> x;
-        if(x <= k && st.find(x) != st.end()) continue;
-        // cout << x << endl;
-        if(x <= k)
-        {
-            sum -= x;
-            st.insert(x);
-        }
+        ll x, y;
+        cin >> x >> y;
+        height += x;
+        d = max(d, y - x);
     }
-    cout << sum << endl;
+    cout << height + d << endl;
 }
 int32_t main()
 {
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
-    int ttest = 1; 
-    // cin >> ttest;
+    int ttest = 1;
+//    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

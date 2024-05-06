@@ -43,15 +43,7 @@ void solve()
             (((j + (1 << (i - 1))) < n) ? sparceTable[i - 1][j + (1 << (i - 1))] : 0);
         }
     }
-    // for(int i = 0; i < power; ++i)
-    // {
-    //     cout << (1 << i) << ": ";
-    //     for(int j = 0; j < n; ++j)
-    //     {
-    //         cout << sparceTable[i][j] << ", ";
-    //     }
-    //     cout << endl;
-    // }
+
     auto ask = [sparceTable, log2](int l, int r)->ll
     {
         unsigned len = r - l + 1;

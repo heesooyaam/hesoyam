@@ -15,76 +15,33 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
-ll MOD = 1'000'000'007;
-vector<ll> power2;
+#define endl '\n'
+
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    vector<ll> vec(n);
-    for(int i = 0; i < n; ++i)
+    int n, m;
+    string s, q;
+    cin >> n >> m >> s >> q;
+    ll ans = 0;
+    for(int ptrS = 0, ptrQ = 0; ptrS < n; ++ptrS, ans = ptrS)
     {
-        cin >> vec[i];
-    }
-    ll cur = 0;
-    ll mx = *max_element(all(vec));
-    if(mx < 0)
-    {
-        // cout << "!" << endl;
-        ll sum = 0;
-        for(int i = 0; i < n; ++i)
+        while(ptrQ < m && q[ptrQ] != s[ptrS]) ++ptrQ;
+
+        if(ptrQ == m)
         {
-            sum += vec[i] + MOD;
-            sum %= MOD;
+            ans = ptrS;
+            break;
         }
-        // cout << sum << endl;
-        cout << (sum + MOD) % MOD << endl;
-        return;
+        else ++ptrQ;
     }
-    else if(mx == 0)
-    {
-        ll sum = 0;
-        for(int i = 0; i < n; ++i)
-        {
-            sum += vec[i] + MOD;
-            sum %= MOD;
-        }
-        cout << (sum + MOD) % MOD << endl; return;
-    }
-    for(int i = 0; i < n; ++i)
-    {
-        mx = max(cur, mx);
-        if(cur + vec[i] > 0)
-        {
-            cur += vec[i];
-        }
-        else
-        {
-            cur = 0;
-        }
-        mx = max(cur, mx);
-    }
-    mx %= MOD;
-    ll sum = 0;
-    for(int i = 0; i < n; ++i)
-    {
-        sum += vec[i];
-    }
-    cout << (sum + (mx * ((power2[k]) - 1) % MOD) + MOD) % MOD << endl;
-    
+    cout << ans << endl;
 }
 int32_t main()
 {
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
-    power2.assign(2e5 + 10, 1);
-    for(int i = 1; i < power2.size(); ++i)
-    {
-        power2[i] = (power2[i - 1] * 2) % MOD;
-    }
-    int ttest = 1; 
+    int ttest = 1;
     cin >> ttest;
     while(ttest--) solve();
     return 0;

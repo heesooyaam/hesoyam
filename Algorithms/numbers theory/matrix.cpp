@@ -79,6 +79,9 @@ void solve()
 {
     vector<ll> a = {1, 1, 1, 1}, b = {1, 1, 1, 1};
     print(matrixAddition(2, 2, 2, 2, a, b));
+    // vector<int> -> vector<ll>; int -> ll,
+    // assert(a * b == multiplicate(vecA, vecB))
+    // *, +, -, /
 }
 int32_t main()
 {

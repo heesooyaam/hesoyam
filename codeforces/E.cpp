@@ -15,18 +15,18 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
+#define endl '\n'
 
 void solve()
 {
-    
+
 }
 int32_t main()
 {
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
-    int ttest = 1; 
+    int ttest = 1;
     cin >> ttest;
     while(ttest--) solve();
     return 0;

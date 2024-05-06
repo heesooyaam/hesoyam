@@ -15,74 +15,46 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
+#define endl '\n'
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    vector<vector<int>> g(n + 1);
-    for(int i = 0; i < n - 1; ++i)
+    int n;
+    cin >> n;
+    vector<ll> x(n);
+    ll mx = numeric_limits<ll>::min();
+    for(int i = 1; i < n; ++i)
     {
-        int from, to;
-        cin >> from >> to;
-        g[from].pb(to);
-        g[to].pb(from);
+        cin >> x[i];
+        mx = max(mx, x[i]);
     }
-
-    int root;
-    for(int i = 1; i < n + 1; ++i)
+    ll mod = mx + 1;
+    vector<ll> a(n);
+    a[0] = mod;
+    for(int i = 1; i < n; ++i)
     {
-        if(g[i].size() == 1)
+        if(x[i] < a[i - 1])
         {
-            root = i;
-            break;
-        }
-    }
-    
-    int l = 1; int r = n / (k + 1) + 1;
-    function<int(int&, int, int, int)> dfs = [&](int& cnt, int cur, int prev, int x)->int
-    {
-        int size = 1;
-        for(auto& to : g[cur])
-        {
-            if(to == prev) continue;
-            int childs = dfs(cnt, to, cur, x);
-            if(childs >= x)
-            {
-                ++cnt;
-            }
-            else
-            {
-                size += childs;
-            }
-        }
-        return size;
-    };
-
-    while(l + 1 < r)
-    {
-        int mid = (l + r) / 2;
-        int cnt = 0;
-        cnt += dfs(cnt, root, -1, mid) >= mid;
-        if(cnt < k + 1)
-        {
-            r = mid;
+            a[i] = a[i - 1] + x[i];
         }
         else
         {
-            l = mid;
+            a[i] = (x[i] / a[i - 1] + 1) * a[i - 1] + x[i];
         }
     }
-    cout << l << endl;
-    
+    for(int i = 1; i < n; ++i)
+    {
+        assert(a[i] % a[i - 1] == x[i]);
+    }
+    print(a);
+
 }
 int32_t main()
 {
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
-    int ttest = 1; 
+    int ttest = 1;
     cin >> ttest;
     while(ttest--) solve();
     return 0;

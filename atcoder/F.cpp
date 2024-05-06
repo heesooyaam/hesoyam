@@ -10,171 +10,86 @@ using ld = long double;
 #define ppf pop_front
 #define ss second
 #define ff first
-// #define mp make_pair
+#define mp make_pair
 #define all(x) (x).begin(),(x).end()
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
-struct Tree
-{
-    Tree(vector<ll>& vec)
-    : n(vec.size())
-    , vec(vec)
-    {
-        tree.resize(4 * n, {});
-        build(0, 0, n);
-    }
-    void update(int pos, ll val)
-    {
-        update(0, pos, val, 0, n);
-        vec[pos] = val;
-    }
-    ll get(int l, int r)
-    {
-        auto res = get(0, l, r, 0, n);
-        return (res.ff.ff != 0) ? res.ff.ss : 0;
-    }
-private:
-    int n;
-    vector<map<ll, int>> tree;
-    vector<ll>& vec;
-    void update(int idx, int pos, ll val, int l, int r)
-    {
-        if(l + 1 == r)
-        {
-            auto it = tree[idx].find(vec[pos]);
-            if(it->ss == 1) tree[idx].erase(it);
-            else it->ss -= 1;
+#define endl '\n'
+using namespace std;
 
-            tree[idx][val] += 1;
-            return;
-        }
-        int mid = (l + r) >> 1;
-        if(pos < mid)
-        {
-            update(idx * 2 + 1, pos, val, l, mid);
-        }
-        else{
-            update(idx * 2 + 2, pos, val, mid, r);
-        }
-        auto it = tree[idx].find(vec[pos]);
-        if(it->ss == 1) tree[idx].erase(it);
-        else it->ss -= 1;
-        tree[idx][val] += 1;
-    }
-    pair<pair<int, int>, pair<int, int>> combine(pair<pair<int, int>, pair<int, int>> a, pair<pair<int, int>, pair<int, int>> b)
-    {
-        int MX1, MX2;
-        MX1 = max({a.ff.ff, a.ss.ff, b.ff.ff, b.ss.ff});
-        MX2 = max({(a.ff.ff != MX1) ? a.ff.ff : 0, (a.ss.ff != MX1) ? a.ss.ff : 0, (b.ff.ff != MX1) ? b.ff.ff : 0, (b.ss.ff != MX1) ? b.ss.ff : 0});
-        int cnt1 = 0, cnt2 = 0;
-        if(MX1 == a.ff.ff) cnt1 += a.ff.ss;
-        else if(MX2 == a.ff.ff) cnt2 += a.ff.ss;
+// Функция для выполнения Гауссова исключения
+void gaussianElimination(vector<vector<int>>& mat) {
+    int n = mat.size();
 
-        if(MX1 == a.ss.ff) cnt1 += a.ss.ss;
-        else if(MX2 == a.ss.ff) cnt2 += a.ss.ss;
-
-        if(MX1 == b.ff.ff) cnt1 += b.ff.ss;
-        else if(MX2 == b.ff.ff) cnt2 += b.ff.ss;
-
-        if(MX1 == b.ss.ff) cnt1 += b.ss.ss;
-        else if(MX2 == b.ss.ff) cnt2 += b.ss.ss;
-
-        return {{MX2, cnt2}, {MX1, cnt1}};
-    }
-    pair<pair<int, int>, pair<int, int>> get(int idx, int l, int r, int curL, int curR)
-    {
-
-        if(l == curL && r == curR)
-        {
-            pair<pair<int, int>, pair<int, int>> res = {{prev(prev(tree[idx].end()))->ff, prev(prev(tree[idx].end()))->ss}, {prev(tree[idx].end())->ff, prev(tree[idx].end())->ss}};
-            return res;
-        }
-
-        int mid = (curL + curR) >> 1;
-
-        if(l < mid && mid < r)
-        {
-            return combine(get(idx * 2 + 1, l, min(r, mid), curL, mid), get(idx * 2 + 2, max(l, mid), r, mid, curR));
-        }
-        else if(r <= mid)
-        {
-            return get(idx * 2 + 1, l, min(r, mid), curL, mid);
-        }
-        else
-        {
-            return get(idx * 2 + 2, max(l, mid), r, mid, curR);   
-        }
-
-    }
-    void calc(int idx)
-    {
-        if(tree[idx * 2 + 1].size() < tree[idx * 2 + 2].size())
-        {
-            tree[idx] = tree[idx * 2 + 2];
-            for(auto& [k, v] : tree[idx * 2 + 1])
-            {
-                tree[idx][k] += v;
+    for (int i = 0; i < n; i++) {
+        // Поиск максимума в текущем столбце
+        int maxEl = abs(mat[i][i]);
+        int maxRow = i;
+        for (int k = i + 1; k < n; k++) {
+            if (abs(mat[k][i]) > maxEl) {
+                maxEl = abs(mat[k][i]);
+                maxRow = k;
             }
         }
-        else
-        {
-            tree[idx] = tree[idx * 2 + 1];
-            for(auto& [k, v] : tree[idx * 2 + 2])
-            {
-                tree[idx][k] += v;
-            }   
-        }
-    }
-    void build(int idx, int l, int r)
-    {
-        if(l + 1 == r)
-        {
-            tree[idx][0]++;
-            tree[idx][vec[l]]++;
-            return;
-        }
-        int mid = (l + r) / 2;
 
-        build(idx * 2 + 1, l, mid);
-        build(idx * 2 + 2, mid, r);
-        calc(idx);
-    }
-};
-void solve()
-{
-    int n, q;
-    cin >> n >> q;
-    vector<ll> vec(n);
-    input(vec);
-    Tree ST(vec);
-    for(int i = 0; i < q; ++i)
-    {
-        int type;
-        cin >> type;
-        if(type == 1)
-        {
-            int pos;
-            ll val;
-            cin >> pos >> val;
-            ST.update(pos - 1, val);
+        // Перестановка максимальной строки с текущей
+        for (int k = i; k < n + 1; k++) {
+            swap(mat[maxRow][k], mat[i][k]);
         }
-        else
-        {
-            int l, r;
-            cin >> l >> r;
-            cout << ST.get(l - 1, r) << endl;
+
+        // Обнуление всех элементов ниже i-го элемента в i-м столбце
+        for (int k = i + 1; k < n; k++) {
+            int c = -mat[k][i] / mat[i][i];
+            for (int j = i; j < n + 1; j++) {
+                if (i == j) {
+                    mat[k][j] = 0;
+                } else {
+                    mat[k][j] += c * mat[i][j];
+                }
+            }
         }
     }
 }
-int32_t main()
-{
-    // freopen("input.txt", "r", stdin);
-    // freopen("output.txt", "w", stdout);
-    ios::sync_with_stdio(0); cin.tie(0);
-    int ttest = 1; 
-    // cin >> ttest;
-    while(ttest--) solve();
+
+// Функция обратной подстановки
+vector<int> backSubstitution(vector<vector<int>>& mat) {
+    int n = mat.size();
+    vector<int> x(n, -1); // Инициализация всех переменных значением -1
+
+    for (int i = n - 1; i >= 0; i--) {
+        if (mat[i][i] != 0) { // Проверка на ненулевой пивот
+            x[i] = mat[i][n] / mat[i][i];
+            for (int k = i - 1; k >= 0; k--) {
+                mat[k][n] -= mat[k][i] * x[i];
+            }
+        }
+    }
+    return x;
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> mat(n, vector<int>(n + 1));
+
+//    cout << "Enter augmented matrix (coefficients and constants):" << endl;
+    for (int i = 0; i < m; i++) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        mat[i][a - 1] = 1;
+        mat[i][b - 1] = 1;
+        mat[i].back() = c;
+    }
+
+    gaussianElimination(mat);
+    vector<int> solution = backSubstitution(mat);
+
+    cout << "Solution:" << endl;
+    for (int i = 0; i < n; i++) {
+        cout << "x" << i << " = " << solution[i] << endl;
+    }
+
     return 0;
 }

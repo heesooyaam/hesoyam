@@ -15,28 +15,32 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
+#define endl '\n'
 
 void solve()
 {
     int n;
     cin >> n;
-    vector<int> vec(n);
-    input(vec);
-    vec.pb(-1);
-    vector<int> sorted = vec;
-    sort(all(sorted));
-    int idx = n / 2 + n % 2;
-    // cout << (lower_bound(all(sorted), sorted[idx]) - sorted.begin()) << endl;
-    // cout << upper_bound(all(sorted), sorted[idx]) - sorted.begin() << endl;
-    cout << upper_bound(all(sorted), sorted[idx]) - sorted.begin() - idx<< endl;
+    ll mx = 2;
+    ll ans = 1;
+    for(int i = 1; i < n; ++i)
+    {
+        int d1 = i;
+        int cur = (gcd(n, d1) + d1);
+        if(d1 < n && cur >  mx)
+        {
+            mx = gcd(n, d1) + d1;
+            ans = d1;
+        }
+    }
+    cout << ans << endl;
 }
 int32_t main()
 {
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
-    int ttest = 1; 
+    int ttest = 1;
     cin >> ttest;
     while(ttest--) solve();
     return 0;

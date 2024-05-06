@@ -15,51 +15,42 @@ using ld = long double;
 #define print(x); for(auto& val : x){cout << val << ' ';}cout << endl;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
-#define endl '\n'   
-#define int int64_t
+#define endl '\n'
 
 void solve()
 {
-    ll n;
-    cin >> n;
-    string s;
-    cin >> s;
-    vector<ll> cost(n + 1);
-    for(int i = 1; i < n + 1; ++i)
+    int n, k;
+    cin >> n >> k;
+    vector<int> p(n + 1);
+    for(int i = 0; i < n; ++i)
     {
-        cin >> cost[i];
+        int x;
+        cin >> x;
+        p[x] = i;
     }
-    int cnt = 0;
-    for(int i = 0; i < n - 1 && cnt <= 1; ++i)
+    set<ll> idx;
+    for(int i = 1; i <= k; ++i)
     {
-        if(s[i] == s[i + 1]) ++cnt;
+        idx.insert(p[i]);
     }
-    if(cnt == 1)
+    ll ans = *prev(idx.end()) - *idx.begin();
+    for(int i = k + 1; i < n + 1; ++i)
     {
-        cout << 0 << endl;
-        return;
+        int newIdx = p[i];
+        int oldIdx = p[i - k];
+        idx.erase(oldIdx);
+        idx.insert(newIdx);
+        ans = min(ans, *prev(idx.end()) - *idx.begin());
     }
-    vector<vector<vector<ll>>> dp(n + 1, vector<vector<ll>> (2, vector<ll> (2)));
-    dp[1][0][0] = cost[1] * (s[0] != '0');
-    dp[1][0][1] = cost[1] * (s[0] != '1');
-    dp[1][1][0] = numeric_limits<ll>::max();
-    dp[1][1][1] = numeric_limits<ll>::max();
-    for(int i = 2; i <= n; ++i)
-    {
-        dp[i][0][0] = dp[i - 1][0][1] + cost[i] * int64_t(s[i - 1] != '0');
-        dp[i][0][1] = dp[i - 1][0][0] + cost[i] * (s[i - 1] != '1');
-        dp[i][1][0] = min(dp[i - 1][0][0], dp[i - 1][1][1]) + cost[i] * int64_t(s[i - 1] != '0');
-        dp[i][1][1] = min(dp[i - 1][0][1], dp[i - 1][1][0]) + cost[i] * int64_t(s[i - 1] != '1');
-    }
-    cout << min(dp[n][1][0], dp[n][1][1]) << endl;
+    cout << ans << endl;
 }
 int32_t main()
 {
     // freopen("input.txt", "r", stdin);
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
-    int ttest = 1; 
-    // cin >> ttest;
+    int ttest = 1;
+//    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

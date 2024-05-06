@@ -19,7 +19,14 @@ using ld = long double;
 
 void solve()
 {
-
+    string s, t;
+    cin >> s >> t;
+    for(int i = 0, j = 0; i < s.size(); ++i)
+    {
+        while(j < t.size() && t[j] != s[i]) ++j;
+        ++j;
+        cout << j << ' ';
+    }
 }
 int32_t main()
 {
@@ -27,7 +34,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1;
-    cin >> ttest;
+//    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }
