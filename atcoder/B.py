@@ -1,7 +1,19 @@
-from math import log2
-a, b, c = map(int, input().split())
-print(str(2**a) + " % (" + str(2**b) + " - " + str(2**c) + ") = " + str(2**a % (2**b - 2**c)))
-print(str(2**a) + " // (" + str(2**b) + " - " + str(2**c) + ") = " + str(2**a // (2**b - 2**c)))
-print(str(2**a) + " // (" + str(2**b) + " - " + str(2**c) + ") = 2^" + str(log2(2**a // (2**b - 2**c))))
-print(str(2**a % (2**b - 2**c))[-1])
-print(str(2**a) + " % (" + str(2**b) + " - " + str(2**c) + ") = " + str(2**a % (2**b - 2**c)) + " = " + str(2**a) + " - " + str((2**b - 2**c) * (2**a // (2**b - 2**c))))
+n = int(input())
+arr = list(reversed([int(i) for i in input().split()]))
+
+d = dict()
+ans = 0
+mod = 998244353
+for i in range(n):
+    cnt = n - i - 1
+    ans += cnt * arr[i]
+    ans %= mod
+    for length, v in d.items():
+        ans += v * arr[i] * (10**length)
+        ans %= mod
+    if len(str(arr[i])) in d:
+        d[len(str(arr[i]))] += 1
+    else:
+        d[len(str(arr[i]))] = 1
+
+print(ans % mod)

@@ -16,6 +16,13 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'
+struct Change
+{
+    int v, parent, amount_of_unions;
+    Change() = default;
+    Change(int v, int parent, int amount_of_unions)
+    : v(v), parent(parent), amount_of_unions(amount_of_unions) {}
+};
 class DSU
 {
 public:
@@ -36,7 +43,7 @@ public:
 
         return getParent(parent[v]);
     }
-    void unite(int a, int b, vector<pair<int, int>>& history)
+    void unite(int a, int b, vector<Change>& history)
     {
         a = getParent(a);
         b = getParent(b);
@@ -46,8 +53,8 @@ public:
         {
             swap(a, b);
         }
+        history.eb(a, parent[a], unionSize[b]);
         unionSize[b] += unionSize[a];
-        history.eb(a, parent[a]);
         parent[a] = b;
     }
     int& operator[](size_t idx)
@@ -86,13 +93,6 @@ public:
 class DCP_Tree
 {
 public:
-    struct Change
-    {
-        int v, parent, amount_of_unions;
-        Change() = default;
-        Change(int v, int parent, int amount_of_unions)
-
-    };
     struct Node
     {
         vector<Change> history;
@@ -110,7 +110,6 @@ public:
         if(l + 1 == r)
         {
             if(questions[l]) cout << dsu.unionsAmount() << endl;
-
             return;
         }
 
@@ -119,14 +118,11 @@ public:
             dsu.unite(from, to, tree[idx].history);
         }
 
-        while(!tree[idx].history.empty())
-        {
-
-        }
         int mid = (l + r) >> 1;
         go(idx * 2 + 1, l, mid, dsu, questions);
         go(idx * 2 + 2, mid, r, dsu, questions);
 
+        previousVersion(idx, dsu);
     }
 private:
     int n;
@@ -137,7 +133,7 @@ private:
 
         if(curL == l && curR == r)
         {
-            tree[idx].changes.emplace_back(edge);
+            tree[idx].edges.emplace_back(edge);
             return;
         }
 
@@ -145,6 +141,19 @@ private:
 
         addEdge(idx * 2 + 1, curL, mid, l, min(r, mid), edge);
         addEdge(idx * 2 + 2, mid, curR, max(l, mid), r, edge);
+    }
+    void previousVersion(int idx, DSU& dsu)
+    {
+        auto& history = tree[idx].history;
+        for(int i = 0; i < history.size(); ++i)
+        {
+            auto& v = history[i].v;
+            auto& parent = history[i].parent;
+            auto& size = history[i].amount_of_unions;
+            dsu[v] = parent;
+            dsu.unionsAmount() = size;
+        }
+        history.clear();
     }
 };
 void solve()

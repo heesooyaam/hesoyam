@@ -16,10 +16,58 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'
-
+struct border
+{
+    ll l, r;
+    ll time;
+};
 void solve()
 {
-
+    int n, k, q;
+    cin >> n >> k >> q;
+    vector<border> borders(k);
+    borders[0].l = 0;
+    vector<ll> rights(k);
+    for(int i = 0; i < k; ++i)
+    {
+        ll r;
+        cin >> r;
+        borders[i].r = r;
+        rights[i] = r;
+        if(i + 1 < k) borders[i + 1].l = r;
+    }
+    for(int i = 0; i < k; ++i)
+    {
+        ll t;
+        cin >> t;
+        borders[i].time = t;
+    }
+    auto v = [&](int idx)
+    {
+        return (ld) (borders[idx].r - borders[idx].l) / borders[idx].time;
+    };
+    for(int i = 0; i < q; ++i)
+    {
+        ll x;
+        cin >> x;
+        if(x == 0)
+        {
+            cout << 0 << endl;
+            continue;
+        }
+        int last_idx = lower_bound(all(rights), x) - rights.begin();
+        if(last_idx == 0)
+        {
+            cout << (ll) (x * borders[last_idx].time / ((borders[last_idx].r - borders[last_idx].l))) << ' ';
+        }
+        else
+        {
+            ll last_x = x - borders[last_idx].l;
+            ll last_time = borders[last_idx].time - borders[last_idx - 1].time;
+            cout << borders[last_idx - 1].time + last_x * last_time / (borders[last_idx].r - borders[last_idx].l) << ' ';
+        }
+    }
+    cout << endl;
 }
 int32_t main()
 {

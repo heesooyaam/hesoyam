@@ -19,30 +19,18 @@ using ld = long double;
 
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
-    vector<int> p(n + 1);
-    for(int i = 0; i < n; ++i)
+    ll n, h;
+    cin >> n >> h;
+    vector<ll> x(n + 1, 0);
+    for(int i = 1; i < n + 1; ++i)
     {
-        int x;
-        cin >> x;
-        p[x] = i;
+        cin >> x[i];
     }
-    set<ll> idx;
-    for(int i = 1; i <= k; ++i)
+    vector<ll> cnt(n + 1, 0);
+    for(int i = n - 1; i >= 1; --i)
     {
-        idx.insert(p[i]);
+        if(x[i] + h > cnt[])
     }
-    ll ans = *prev(idx.end()) - *idx.begin();
-    for(int i = k + 1; i < n + 1; ++i)
-    {
-        int newIdx = p[i];
-        int oldIdx = p[i - k];
-        idx.erase(oldIdx);
-        idx.insert(newIdx);
-        ans = min(ans, *prev(idx.end()) - *idx.begin());
-    }
-    cout << ans << endl;
 }
 int32_t main()
 {
@@ -50,7 +38,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1;
-//    cin >> ttest;
+    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

@@ -19,69 +19,34 @@ using ld = long double;
 
 void solve()
 {
-    ll n, k, ptrB, ptrS;
-    cin >> n >> k >> ptrB >> ptrS;
-    vector<ll> perm(n + 1);
-    for(int i = 1; i < n + 1; ++i)
+    string s;
+    cin >> s;
+    std::string vec;
+    for(int i = 0; i < s.size(); ++i)
     {
-        cin >> perm[i];
+        if(vec.empty() || vec.back() != s[i])
+        {
+            vec.pb(s[i]);
+        }
+        else continue;
     }
-    vector<ll> a(n + 1);
-    for(int i = 1; i < n + 1; ++i)
+    bool sorted = true;
+    for(int i = 0; i < vec.size() && sorted; ++i)
     {
-        cin >> a[i];
+        if(vec[i] < vec[i - 1]) sorted = false;
     }
-    if(ptrB == ptrS)
+    if(sorted)
     {
-        cout << "Draw" << endl;
+        cout << 1 << endl;
         return;
     }
-    vector<pair<ll, ll>> dpS(n + 1, {numeric_limits<ll>::min(), numeric_limits<ll>::max()}), dpB(n + 1, {numeric_limits<ll>::min(), numeric_limits<ll>::max()});
+    if(vec == "10")
+    {
+        cout << 2 << endl;
+        return;
+    }
+    cout << vec.size() - 1 << endl;
 
-    dpS[ptrS] = {0, 0};
-    dpB[ptrB] = {0, 0};
-    vector<bool> used(n + 1);
-    auto go = [&a, &k, &perm, &used, &n](vector<pair<ll, ll>>& dp, ll ptr)
-    {
-        int from = -1;
-        used[ptr] = true;
-        from = ptr;
-        ptr = perm[ptr];
-        for(int i = 1; !used[ptr]; ++i)
-        {
-            if(used[ptr]) break;
-            used[ptr] = true;
-            dp[ptr] = {dp[from].ff + a[from], i};
-            from = ptr;
-            ptr = perm[ptr];
-        }
-    };
-    go(dpS, ptrS);
-    used.assign(n + 1, false);
-    go(dpB, ptrB);
-    ll scoreS = 0;
-    for(ll i = 1; i < n + 1; ++i)
-    {
-        ll actions = dpS[i].ss;
-        ll sum = dpS[i].ff;
-        if(actions <= k) scoreS = max(scoreS, sum + (k - actions) * a[i]);
-    }
-    ll scoreB = 0;
-    for(ll i = 1; i < n + 1; ++i)
-    {
-        ll actions = dpB[i].ss;
-        ll sum = dpB[i].ff;
-        if(actions <= k) scoreB = max(scoreB, sum + (k - actions) * a[i]);
-    }
-    if(scoreS == scoreB)
-    {
-        cout << "Draw\n";
-    }
-    else if(scoreB < scoreS)
-    {
-        cout << "Sasha\n";
-    }
-    else cout << "Bodya\n";
 }
 int32_t main()
 {

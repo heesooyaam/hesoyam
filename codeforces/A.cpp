@@ -21,19 +21,42 @@ void solve()
 {
     int n;
     cin >> n;
-    ll mx = 2;
-    ll ans = 1;
-    for(int i = 1; i < n; ++i)
+    vector<ll> vec(n);
+    for(int i = 0; i < n; ++i)
     {
-        int d1 = i;
-        int cur = (gcd(n, d1) + d1);
-        if(d1 < n && cur >  mx)
+        cin >> vec[i];
+    }
+    ll x = vec[1] - vec[0];
+    ll ans = numeric_limits<ll>::max();
+    for(ll a1 : {vec[0] - 1, vec[0], vec[0] + 1})
+    {
+        for(ll a2 : {vec[1] - 1, vec[1], vec[1] + 1})
         {
-            mx = gcd(n, d1) + d1;
-            ans = d1;
+            ll d = a2 - a1;
+            ll cnt = a1 != vec[0] + a2 != vec[1];
+            ll prev = a2;
+            bool ok = false;
+            for(int i = 2; i < n; ++i)
+            {
+                for(int delta : {-1, 0, 1})
+                {
+                    if(prev + d == vec[i] + delta)
+                    {
+                        ok = true;
+                        prev = vec[i] + delta;
+                        cnt += delta != 0;
+                        break;
+                    }
+                }
+            }
         }
     }
-    cout << ans << endl;
+    if(ans == numeric_limits<ll>::max())
+    {
+        cout << -1 << endl;
+    }
+    else cout << ans << endl;
+
 }
 int32_t main()
 {
@@ -41,7 +64,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1;
-    cin >> ttest;
+//    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

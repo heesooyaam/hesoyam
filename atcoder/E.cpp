@@ -16,99 +16,47 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'
-class Edge
-{
-public:
-    int from, to;
-    ll weight;
-    bool operator<(const Edge& other) const
-    {
-        return this->weight < other.weight;
-    }
-};
-class DSU
-{
-public:
-    explicit DSU(size_t size, int indexation = 0)
-    : n(size)
-    , unionsCounter(n)
-    , unionSize(n + indexation, 1)
-    , parent(n + indexation, 0)
-    {
-        for(int i = indexation; i < n + indexation; ++i)
-        {
-            parent[i] = i;
-        }
-    }
-    int getParent(int v)
-    {
-        if(parent[v] == v) return v;
 
-        parent[v] = getParent(parent[v]);
-
-        return parent[v];
-    }
-    void unite(int a, int b)
-    {
-        a = getParent(a);
-        b = getParent(b);
-        if(a == b) return;
-        --unionsCounter;
-        if(unionSize[a] > unionSize[b])
-        {
-            swap(a, b);
-        }
-        unionSize[b] += unionSize[a];
-        parent[a] = b;
-    }
-    bool areInTheSameUnion(int a, int b)
-    {
-        return getParent(a) == getParent(b);
-    }
-    size_t unionsAmount() const
-    {
-        return unionsCounter;
-    }
-private:
-    size_t n;
-    size_t unionsCounter;
-    vector<int> unionSize;
-    vector<int> parent;
-};
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-    vector<Edge> edges;
-    for(int i = 0; i < m; ++i)
-    {
-        int k;
-        ll cost;
-        cin >> k >> cost;
-        int first;
-        cin >> first;
-        for(int j = 0; j < k - 1; ++j)
-        {
-            int to;
-            cin >> to;
-            edges.eb();
-            edges.back() = {.from = first, .to =  to, .weight = cost};
-        }
-    }
-    sort(all(edges));
-    DSU dsu(n, 1);
+    int n;
+    cin >> n;
+    vector<unordered_map<char, int>> g(1);
+    vector<int> parent(1, 0);
+    vector<char> letter(1, '0');
+    vector<int> popularity(1, 0);
     ll ans = 0;
-    for(int i = 0; i < edges.size(); ++i)
+    auto addVertex = [&](char ch, int ancestor, int popular)
     {
-        auto [from, to] = mp(edges[i].from, edges[i].to);
-        if(dsu.areInTheSameUnion(from, to)) continue;
+        g[ancestor][ch] = parent.size();
+        g.eb();
+        letter.eb(ch);
+        popularity.eb(popular);
+        parent.eb(ancestor);
+        return parent.size() - 1;
+    };
+    function<void(string&, int, int)> go = [&](string& s, int curTreeIdx, int i)
+    {
+        if(i == s.size()) return;
+        if(g[curTreeIdx].contains(s[i]))
+        {
+            curTreeIdx = g[curTreeIdx][s[i]];
+            ans += popularity[curTreeIdx];
+            popularity[curTreeIdx] += 1;
+        }
         else
         {
-            dsu.unite(from, to);
-            ans += edges[i].weight;
+            curTreeIdx = addVertex(s[i], curTreeIdx, 1);
         }
+        go(s, curTreeIdx, i + 1);
+    };
+    for(int i = 0; i < n; ++i)
+    {
+        string s;
+        cin >> s;
+        go(s, 0, 0);
     }
-    cout << ((dsu.unionsAmount() == 1) ? ans : -1) << endl;
+    cout << ans << endl;
 }
 int32_t main()
 {

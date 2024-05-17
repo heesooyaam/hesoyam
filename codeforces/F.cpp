@@ -19,59 +19,27 @@ using ld = long double;
 
 void solve()
 {
-    int n;
+    ll n;
     cin >> n;
-    int k;
-    cin >> k >> k;
-    string s;
-    cin >> s;
-    auto count = [&](const string& temp)
+    ll quad = n * n;
+    ll ans = 0;
+    for(ll x = 0; x <= n; ++x)
     {
-        ll res = 0;
-        for(int i = 0; i < n;)
-        {
-            if(s[i] != temp.front())
-            {
-                ++i;
-                continue;
-            }
-            int cur = i;
-            int j = 0;
-            for(; cur < s.size() && j < temp.size();)
-            {
-                if(s[cur] == temp[j])
-                {
-                    ++cur; ++j;
-                }
-                else break;
-            }
-            if(j == temp.size())
-            {
-                i = cur;
-                ++res;
-            }
-            else
-            {
-                ++i;
-            }
-        }
-        return res;
-    };
-    int l = 0; int r = n / k;
-    while(l + 1 < r)
-    {
-        int mid = (l + r) >> 1;
-        if(count(s.substr(0, mid)) >= k)
-        {
-            l = mid;
-        }
-        else r = mid - 1;
+       ll min_y = quad - x * x;
+       ll y = sqrtl(min_y);
+       ll cur = 0;
+       while((y * y + x * x) < (n + 1) * (n + 1))
+       {
+           if(y * y + x * x >= quad)
+           {
+               if(x * y == 0 && x + y != 0) ans += 2;
+               else if(x * y == 0 && x + y == 0) ans += 1;
+               else if(x * y != 0 && x + y != 0) ans += 4;
+           }
+            ++y;
+       }
     }
-    if(count(s.substr(0, r)) >= k)
-    {
-        cout << r << endl;
-    }
-    else cout << l << endl;
+    cout << ans << endl;
 }
 int32_t main()
 {
