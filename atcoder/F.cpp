@@ -16,80 +16,184 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'
-using namespace std;
+#define int int64_t
+class Tree
+{
+public:
+    explicit Tree(const vector<ll>& a, const vector<ll>& b, const ll MOD = 1'000'000'007)
+            : n(a.size())
+            , MOD(MOD)
+            , tree(n << 2, Node())
+    {
+        build(0, 0, n, a, b);
+    }
+    void update(int l, int r, ll x, int type)
+    {
+        array<ll, 2> d = {0, 0};
+        d[type - 1] = x;
+        return update(0, l, r, 0, n, d);
+    }
+    ll get(int l, int r)
+    {
+        return get(0, l, r, 0, n);
+    }
+private:
+    size_t n;
+    struct Node
+    {
+        Node()
+                : sum({0, 0, 0})
+                , d({0, 0})
+                , push(false) {}
+        array<ll, 3> sum;
+        array<ll, 2> d;
+        bool push = false;
+    };
+    const ll MOD;
+    array<int, 2> childs;
+    vector<Node> tree;
 
-// Функция для выполнения Гауссова исключения
-void gaussianElimination(vector<vector<int>>& mat) {
-    int n = mat.size();
+    void merge(int idx)
+    {
+        assert(!tree[idx].push);
+        childs = {idx * 2 + 1, idx * 2 + 2};
+        tree[idx].sum = {0, 0, 0};
+        for(auto&& child : childs)
+        {
+            tree[idx].sum[0] += tree[child].sum[0];
+            tree[idx].sum[1] += tree[child].sum[1];
+            tree[idx].sum[2] += tree[child].sum[2];
+        }
+        for(int i : {0, 1, 2})
+        {
+            tree[idx].sum[i] %= MOD;
+        }
+    }
+    void recalc(int idx, const array<ll, 2>& d, ll length)
+    {
+        tree[idx].sum[2] +=
+                (d[1] * tree[idx].sum[0]) % MOD
+                + (d[0] * tree[idx].sum[1]) % MOD
+                + (((d[1] * d[0]) % MOD) * length) % MOD;
+        tree[idx].sum[2] %= MOD;
 
-    for (int i = 0; i < n; i++) {
-        // Поиск максимума в текущем столбце
-        int maxEl = abs(mat[i][i]);
-        int maxRow = i;
-        for (int k = i + 1; k < n; k++) {
-            if (abs(mat[k][i]) > maxEl) {
-                maxEl = abs(mat[k][i]);
-                maxRow = k;
-            }
+        tree[idx].sum[0] += (d[0] * length) % MOD;
+        tree[idx].sum[0] %= MOD;
+
+        tree[idx].sum[1] += (d[1] * length) % MOD;
+        tree[idx].sum[1] %= MOD;
+
+        tree[idx].d[0] += d[0];
+        tree[idx].d[0] %= MOD;
+        tree[idx].d[1] += d[1];
+        tree[idx].d[1] %= MOD;
+
+        tree[idx].push = true;
+    }
+
+    void push(int idx, int curL, int curR)
+    {
+        if(!tree[idx].push || curL + 1 == curR) return;
+
+        int l_child = idx * 2 + 1, r_child = idx * 2 + 2;
+        int mid = (curL + curR) >> 1;
+
+        // left child:
+        recalc(l_child, tree[idx].d, mid - curL);
+
+        // right child:
+        recalc(r_child, tree[idx].d, curR - mid);
+
+        tree[idx].push = false;
+        tree[idx].d = {0, 0};
+    }
+    void build(int idx, int l, int r, const vector<ll>& a, const vector<ll>& b)
+    {
+        if(l + 1 == r)
+        {
+            tree[idx].sum[0] = a[l];
+            tree[idx].sum[1] = b[l];
+            tree[idx].sum[2] = (a[l] * b[l]) % MOD;
+            return;
         }
 
-        // Перестановка максимальной строки с текущей
-        for (int k = i; k < n + 1; k++) {
-            swap(mat[maxRow][k], mat[i][k]);
+        int mid = (l + r) >> 1;
+
+        build(idx * 2 + 1, l, mid, a, b);
+        build(idx * 2 + 2, mid, r, a, b);
+
+        merge(idx);
+    }
+
+    void update(int idx, int l, int r, int curL, int curR, const array<ll, 2>& d)
+    {
+        if(l >= r) return;
+
+        if(l == curL && r == curR)
+        {
+            return recalc(idx, d, curR - curL);
         }
 
-        // Обнуление всех элементов ниже i-го элемента в i-м столбце
-        for (int k = i + 1; k < n; k++) {
-            int c = -mat[k][i] / mat[i][i];
-            for (int j = i; j < n + 1; j++) {
-                if (i == j) {
-                    mat[k][j] = 0;
-                } else {
-                    mat[k][j] += c * mat[i][j];
-                }
-            }
+        int mid = (curL + curR) >> 1;
+
+        push(idx, curL, curR);
+
+        update(idx * 2 + 1, l, min(mid, r), curL, mid, d);
+        update(idx * 2 + 2, max(l, mid), r, mid, curR, d);
+
+        merge(idx);
+    }
+
+    ll get(int idx, int l, int r, int curL, int curR)
+    {
+        if(l >= r) return 0;
+
+        push(idx, curL, curR);
+
+        if(l == curL && r == curR)
+        {
+            return tree[idx].sum[2];
+        }
+
+        int mid = (curL + curR) >> 1;
+
+
+        return (get(idx * 2 + 1, l, min(mid, r), curL, mid)
+                + get(idx * 2 + 2, max(l, mid), r, mid, curR)) % MOD;
+    }
+};
+void solve()
+{
+    int n, q;
+    cin >> n >> q;
+    vector<ll> a(n), b(n);
+    input(a);
+    input(b);
+    Tree ST(a, b, 998244353);
+    for(int i = 0; i < q; ++i)
+    {
+        int type, l, r;
+        cin >> type >> l >> r;
+        if(type < 3)
+        {
+            ll x;
+            cin >> x;
+            ST.update(l - 1, r, x, type);
+        }
+        else
+        {
+            ll res = ST.get(l - 1, r);
+            cout << res << endl;
         }
     }
 }
-
-// Функция обратной подстановки
-vector<int> backSubstitution(vector<vector<int>>& mat) {
-    int n = mat.size();
-    vector<int> x(n, -1); // Инициализация всех переменных значением -1
-
-    for (int i = n - 1; i >= 0; i--) {
-        if (mat[i][i] != 0) { // Проверка на ненулевой пивот
-            x[i] = mat[i][n] / mat[i][i];
-            for (int k = i - 1; k >= 0; k--) {
-                mat[k][n] -= mat[k][i] * x[i];
-            }
-        }
-    }
-    return x;
-}
-
-int main() {
-    int n, m;
-    cin >> n >> m;
-
-    vector<vector<int>> mat(n, vector<int>(n + 1));
-
-//    cout << "Enter augmented matrix (coefficients and constants):" << endl;
-    for (int i = 0; i < m; i++) {
-        int a, b, c;
-        cin >> a >> b >> c;
-        mat[i][a - 1] = 1;
-        mat[i][b - 1] = 1;
-        mat[i].back() = c;
-    }
-
-    gaussianElimination(mat);
-    vector<int> solution = backSubstitution(mat);
-
-    cout << "Solution:" << endl;
-    for (int i = 0; i < n; i++) {
-        cout << "x" << i << " = " << solution[i] << endl;
-    }
-
+int32_t main()
+{
+    // freopen("input.txt", "r", stdin);
+    // freopen("output.txt", "w", stdout);
+    ios::sync_with_stdio(0); cin.tie(0);
+    int ttest = 1;
+//    cin >> ttest;
+    while(ttest--) solve();
     return 0;
 }

@@ -16,47 +16,29 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'
+const ll MOD = 998244353;
 
 void solve()
 {
     int n;
     cin >> n;
-    vector<ll> vec(n);
+    vector<ll> a(n);
+    input(a);
+    vector<map<ll, ll>> dp(n + 1);
+    dp[0][0] = 1;
     for(int i = 0; i < n; ++i)
     {
-        cin >> vec[i];
-    }
-    ll x = vec[1] - vec[0];
-    ll ans = numeric_limits<ll>::max();
-    for(ll a1 : {vec[0] - 1, vec[0], vec[0] + 1})
-    {
-        for(ll a2 : {vec[1] - 1, vec[1], vec[1] + 1})
+        for(auto it : (dp[i].size() == 1) ? {dp[i].begin(), --dp[i].end()} : {})
         {
-            ll d = a2 - a1;
-            ll cnt = a1 != vec[0] + a2 != vec[1];
-            ll prev = a2;
-            bool ok = false;
-            for(int i = 2; i < n; ++i)
-            {
-                for(int delta : {-1, 0, 1})
-                {
-                    if(prev + d == vec[i] + delta)
-                    {
-                        ok = true;
-                        prev = vec[i] + delta;
-                        cnt += delta != 0;
-                        break;
-                    }
-                }
-            }
+            auto&& [score, cnt] = *it;
+
+            dp[i + 1][score + a[i]] += cnt;
+            dp[i + 1][score + a[i]] %= MOD;
+            dp[i + 1][llabs(score + a[i])] += cnt;
+            dp[i + 1][llabs(score + a[i])] %= MOD;
         }
     }
-    if(ans == numeric_limits<ll>::max())
-    {
-        cout << -1 << endl;
-    }
-    else cout << ans << endl;
-
+    cout << prev(dp[n].end())->ss << endl;
 }
 int32_t main()
 {
@@ -64,7 +46,7 @@ int32_t main()
     // freopen("output.txt", "w", stdout);
     ios::sync_with_stdio(0); cin.tie(0);
     int ttest = 1;
-//    cin >> ttest;
+    cin >> ttest;
     while(ttest--) solve();
     return 0;
 }

@@ -16,46 +16,129 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'
-vector<ll> money = {1, 5, 10, 50, 100, 500};
+template<typename T>
+struct SumAddTree
+{
+    SumAddTree(size_t size, T def = (T) 0)
+            : n(size)
+            , def(def)
+    {
+        tree.assign(n * 4, Node());
+        build(0, 0, n);
+    }
+    SumAddTree(const vector<T>& vec)
+            : n(vec.size())
+    {
+        tree.assign(n * 4, Node());
+        build(0, 0, n, vec);
+    }
+    void update(int l, int r, T val)
+    {
+        update(0, l, r, val, 0, n);
+    }
+    T getSum(int l, int r)
+    {
+        return getSum(0, l, r, 0, n);
+    }
+private:
+    struct Node
+    {
+        T dif = 0;
+        T sum = 0;
+    };
+    int n;
+    T def;
+    vector<Node> tree;
+    void build(int idx, int l, int r)
+    {
+        if(l + 1 == r)
+        {
+            tree[idx].sum = def;
+            return;
+        }
 
-void solve() {
-    vector<ll> cnt(6);input(cnt);
+        int mid = (l + r) / 2;
+
+        build(idx * 2 + 1, l, mid);
+        build(idx * 2 + 2, mid, r);
+
+        tree[idx].sum = tree[idx * 2 + 1].sum + tree[idx * 2 + 2].sum;
+    }
+    void build(int idx, int l, int r, const vector<T>& vec)
+    {
+        if(l + 1 == r)
+        {
+            tree[idx].sum = vec[l];
+            return;
+        }
+
+        int mid = (l + r) / 2;
+
+        build(idx * 2 + 1, l, mid, vec);
+        build(idx * 2 + 2, mid, r, vec);
+
+        tree[idx].sum = tree[idx * 2 + 1].sum + tree[idx * 2 + 2].sum;
+    }
+    void update(int idx, int l , int r, T val, int curL, int curR)
+    {
+        if(l >= r) return;
+
+        if(l == curL && r == curR)
+        {
+            tree[idx].dif += val;
+            tree[idx].sum += val * (r - l);
+            return;
+        }
+
+        int mid = (curL + curR) / 2;
+
+        update(idx * 2 + 1, l, min(mid, r), val, curL, mid);
+        update(idx * 2 + 2, max(mid, l), r, val, mid, curR);
+
+        tree[idx].sum = tree[idx * 2 + 1].sum + tree[idx * 2 + 2].sum + tree[idx].dif * (curR - curL);
+    }
+    T getSum(int idx, int l, int r, int curL, int curR)
+    {
+        if(l >= r) return 0;
+        if(l == curL && r == curR)
+        {
+            return tree[idx].sum;
+        }
+
+        int mid = (curL + curR) / 2;
+
+        return getSum(idx * 2 + 1, l, min(r, mid), curL, mid) + getSum(idx * 2 + 2, max(l, mid), r, mid, curR) + tree[idx].dif * (r - l);
+    }
+};
+void solve()
+{
     int n;
     cin >> n;
-    ll sum = 0;
-    for (int i = 0; i < 6; ++i) {
-        sum += money[i] * cnt[i];
-    }
-    vector<ll> cost(n);input(cost);
-    ll all_cost = 0;
-    for (int i = 0; i < n; ++i)
+    vector<ll> vec(n);
+    input(vec);
+    sort(all(vec));
+    SumAddTree<ll> ST(vec.back() + 1);
+    ST.update(vec.front(), vec.front() + 1, 1);
+    ll ans = 0;
+
+    for(int i = 1; i < n; ++i)
     {
-        all_cost += cost[i];
-    }
-    if(all_cost > sum)
-    {
-        cout << "No\n";
-        return;
-    }
-    sort(all(cost), [](const ll& a, const ll& b) {return a > b;});
-    bool ok = true;
-    for(int i = 0; i < n && ok; ++i)
-    {
-        for(int j = 5; j >= 0; --j)
+        ll d = 1;
+        ll cur = vec[i] / d;
+        ll l = 1, r = vec[i] / cur;
+        while(cur <= vec[i] && cur > 0 && l <= r && r < vec[i])
         {
-            ll can_take = min(cost[i] / money[j], cnt[j]);
-
-            cost[i] -= money[j] * can_take;
-            cnt[j] -= can_take;
+            ans += cur * ST.getSum(l, r + 1);
+            ++d;
+            if(cur == vec[i] / d || vec[i] / d <= 0) break;
+            cur = vec[i] / d;
+            if(!(cur <= vec[i] && cur > 0 && l <= r && r < vec[i])) break;
+            l = max((vec[i] - cur) / cur + !bool(vec[i] % cur), 1ll);
+            r = vec[i] / cur;
         }
-        ok = (cost[i] == 0);
+        ST.update(vec[i], vec[i] + 1, 1);
     }
-    if(ok)
-    {
-        cout << "Yes\n";
-    }
-    else cout << "No\n";
-
+    cout << ans << endl;
 }
 int32_t main()
 {

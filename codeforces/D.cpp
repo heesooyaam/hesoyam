@@ -19,33 +19,6 @@ using ld = long double;
 
 void solve()
 {
-    string s;
-    cin >> s;
-    std::string vec;
-    for(int i = 0; i < s.size(); ++i)
-    {
-        if(vec.empty() || vec.back() != s[i])
-        {
-            vec.pb(s[i]);
-        }
-        else continue;
-    }
-    bool sorted = true;
-    for(int i = 0; i < vec.size() && sorted; ++i)
-    {
-        if(vec[i] < vec[i - 1]) sorted = false;
-    }
-    if(sorted)
-    {
-        cout << 1 << endl;
-        return;
-    }
-    if(vec == "10")
-    {
-        cout << 2 << endl;
-        return;
-    }
-    cout << vec.size() - 1 << endl;
 
 }
 int32_t main()

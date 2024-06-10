@@ -19,30 +19,7 @@ using ld = long double;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    string cur(n, '0');
-    vector<char> act = {'B', 'A'};
-    string ans;
-    for(int i = n - 1; i >= 0; --i)
-    {
-        if(s[i] == cur[i]) continue;
-        else
-        {
-            for(int j = 0; j <= i; ++j)
-            {
-                if(cur[j] != s[i])
-                {
-                    ans.pb(act[s[i] - '0']);
-                    cur[j] = s[i];
-                }
-            }
-        }
-    }
-    cout << ans.size() << endl;
-    cout << ans << endl;
+
 }
 int32_t main()
 {

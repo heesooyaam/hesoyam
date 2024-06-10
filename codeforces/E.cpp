@@ -16,58 +16,97 @@ using ld = long double;
 #define input(x); for(auto& val : x){cin >> val;}
 #define make_unique(x) sort(all((x))); (x).resize(unique(all((x))) - (x).begin())
 #define endl '\n'
-struct border
+
+struct event
 {
-    ll l, r;
-    ll time;
+    event() = default;
+
+    event(int idx, int pos, ll weight, char e)
+    : idx(idx)
+    , pos(pos)
+    , weight(weight)
+    , e(e) {}
+
+    int pos, idx;
+    ll weight;
+    char e;
+
+    bool operator<(const event& other) const
+    {
+        return (pos != other.pos) ? pos < other.pos : e < other.e;
+    }
+};
+struct edge
+{
+    int from, to;
+    ll weight;
+    bool operator<(const edge& other) const
+    {
+        return weight < other.weight;
+    }
+};
+struct vertex
+{
+    int idx;
+    ll weight;
+    bool operator<(const vertex& other) const
+    {
+        return weight < other.weight;
+    }
 };
 void solve()
 {
-    int n, k, q;
-    cin >> n >> k >> q;
-    vector<border> borders(k);
-    borders[0].l = 0;
-    vector<ll> rights(k);
-    for(int i = 0; i < k; ++i)
+    int n;
+    cin >> n;
+    vector<event> events;
+    vector<vertex> vertexes(n);
+    for(int i = 0; i < n; ++i)
     {
-        ll r;
-        cin >> r;
-        borders[i].r = r;
-        rights[i] = r;
-        if(i + 1 < k) borders[i + 1].l = r;
+        int l, r;
+        ll weight;
+        cin >> l >> r >> weight;
+        vertexes[i] = {i, weight};
+        events.eb(i, l, weight, 'o');
+        events.eb(i, r + 1, weight, 'e');
     }
-    for(int i = 0; i < k; ++i)
+
+    sort(all(events));
+    multiset<vertex> cost;
+    vector<edge> edges;
+    int r = 0;
+
+    for(int i = 0; i < events.size(); ++i)
     {
-        ll t;
-        cin >> t;
-        borders[i].time = t;
+        int l = i;
+        while(r < events.size() && events[r].pos == events[i].pos)
+        {
+            if(events[i].e == 'o') cost.emplace(events[r].idx, events[r].weight);
+            else cost.erase(cost.find({events[r].idx, events[r].weight})), ++l;
+        }
+        for(; l < r; ++l)
+        {
+            auto it = cost.lower_bound({0, events[l].weight});
+
+            if(it != cost.end())
+            {
+                if(it->idx != events[l].idx)
+                {
+                    edges.eb(events[l].idx, it->idx, it->weight - events[i].weight);
+                }
+                else
+                {
+                    auto nxt = next(it);
+                    if(nxt != cost.end() && nxt->idx != events[l].idx)
+                    {
+                        edges.eb(events[l].idx, nxt->idx, nxt->weight - events[i].weight);
+                    }
+                }
+            }
+
+            if(it->idx != it)
+
+        }
     }
-    auto v = [&](int idx)
-    {
-        return (ld) (borders[idx].r - borders[idx].l) / borders[idx].time;
-    };
-    for(int i = 0; i < q; ++i)
-    {
-        ll x;
-        cin >> x;
-        if(x == 0)
-        {
-            cout << 0 << endl;
-            continue;
-        }
-        int last_idx = lower_bound(all(rights), x) - rights.begin();
-        if(last_idx == 0)
-        {
-            cout << (ll) (x * borders[last_idx].time / ((borders[last_idx].r - borders[last_idx].l))) << ' ';
-        }
-        else
-        {
-            ll last_x = x - borders[last_idx].l;
-            ll last_time = borders[last_idx].time - borders[last_idx - 1].time;
-            cout << borders[last_idx - 1].time + last_x * last_time / (borders[last_idx].r - borders[last_idx].l) << ' ';
-        }
-    }
-    cout << endl;
 }
 int32_t main()
 {
