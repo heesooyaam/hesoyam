@@ -836,7 +836,7 @@ public:
         x ^= xor_;
 
         ui idx = 0;
-        tree[idx].unique_sheets += add_unique;
+        tree[idx].unique_sheets += 1;
 
         for(int i = 0; i < MAX_POWER; ++i)
         {
