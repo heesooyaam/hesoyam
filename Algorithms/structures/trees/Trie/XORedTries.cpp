@@ -362,7 +362,7 @@ public:
             idx = add_child(idx, bit, add_unique);
         }
 
-        return tree[idx].sheets;
+        return true;
     }
 
     /*
